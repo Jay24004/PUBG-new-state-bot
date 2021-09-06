@@ -15,6 +15,7 @@ class Events(commands.Cog):
         self.bot = bot
         self.mute_task = self.check_current_mutes.start()
         self.ban_task = self.check_current_bans.start()
+        self.count_task = self.change_status.start()
 
 
     def cog_unload(self):
@@ -22,6 +23,22 @@ class Events(commands.Cog):
 
     def cog_unload(self):
         self.ban_task.cancel()
+
+    def cog_unload(self):
+        self.count_task.cancel()
+
+    @tasks.loop(seconds=240)
+    async def change_status(self):      
+        guild = self.bot.get_guild(785839283847954433)
+        members = guild.members
+        count = 0
+        for i in members:
+            if i.bot:
+                count = count + 1
+        
+        member = guild.member_count - count
+        activity = f'over {member} members '
+        await self.bot.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name=f"{activity}"),status= discord.Status.dnd)
 
 
     @tasks.loop(seconds=10)
