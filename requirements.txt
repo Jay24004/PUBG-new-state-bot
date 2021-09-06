@@ -1,5 +1,5 @@
 asyncio==3.4.3
-amari.py=1.1.0
+amari.py==1.1.0
 buttons==0.1.9
 chat-exporter==1.3.0.6.5
 discord.py==1.7.3
