@@ -1,0 +1,7 @@
+__pycache__
+*.ini
+*.pyc
+*.pyc
+cogs/moderation.txt
+.env
+cogs/test.py
