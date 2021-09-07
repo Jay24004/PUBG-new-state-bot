@@ -254,14 +254,14 @@ class giveaway(commands.Cog):
 	@cog_ext.cog_slash(name="gstart",description="A giveaway command", guild_ids=guild_ids,default_permission=False,
 		permissions=admin_perms,
 		options=[
-				create_option(name="time", description="how long giveaway should last Exp 15s,15m/h/d", option_type=3, required=True),
+				create_option(name="time", description="How long the giveaway should last? i.e. 15s , 30m/h/d", option_type=3, required=True),
 				create_option(name="price", description="price of the giveaway", option_type=3, required=True),
-				create_option(name="winners", description="numbers of the winners", option_type=4, required=True),
-				create_option(name="required_role", description="required role to Event the giveaway",option_type=8, required=False),
+				create_option(name="winners", description="Number of the winners.", option_type=4, required=True),
+				create_option(name="required_role", description="Required role to join the giveaway",option_type=8, required=False),
 				create_option(name="bypass_role", description="bypass role to bypass the required role",option_type=8, required=False),
 				create_option(name="amari_level", description="set required amari level",option_type=4, required=False),
 				create_option(name="weekly_amari", description="set giveaway weekly amari",option_type=4, required=False),
-				create_option(name="ping", description="Ping an role", option_type=8, required=False)
+				create_option(name="ping", description="Ping a role", option_type=8, required=False)
 			]
 		)
 	async def gstart(self, ctx, time, price, winners,required_role=None, bypass_role=None, amari_level: int=None, weekly_amari: int=None, ping:discord.Role=None):
@@ -364,7 +364,6 @@ class giveaway(commands.Cog):
 			member = random.choice(users)
 			users.pop(users.index(member))
 			winner_list.append(member.mention)
-			print(winner_list)
 
 			if len(winner_list) == data['winners']: break
 

@@ -27,7 +27,7 @@ class reddit(commands.Cog):
 	async def on_ready(self):
 		print(f"{self.__class__.__name__} has been loaded")
 
-	@cog_ext.cog_slash(name="reddit", description="Get your self some cute pics from selected reddit",guild_ids=guild_ids,
+	@cog_ext.cog_slash(name="reddit", description="Get some nice content from selected subreddits.",guild_ids=guild_ids,
 		options=[
 		create_option(name="reddit",
 			required=True,
