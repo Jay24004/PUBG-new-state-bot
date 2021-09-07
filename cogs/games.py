@@ -56,16 +56,16 @@ class games(commands.Cog):
 
 			await ctx.send(embed=embed)
 
-	@cog_ext.cog_slash(name="spc", description="stone-paper-scissors ",guild_ids=guild_ids,
+	@cog_ext.cog_slash(name="rpc", description="rock-paper-scissors ",guild_ids=guild_ids,
 		options=[
 				create_option(name="choices",
-					description="stone/paper/scissors",
+					description="rock/paper/scissors",
 					required=True,
 					option_type=3,
 					choices=[
 					create_choice(
-							name='stone',
-							value="stone"
+							name='rock',
+							value="rock"
 						),
 					create_choice(
 						name="paper",
@@ -80,32 +80,32 @@ class games(commands.Cog):
 			]
 	)
 	async def spc(self, ctx, choices: str):
-		side = ["stone","paper","scissors","stone","paper","scissors","stone","paper","scissors","stone","paper","scissors"]
+		side = ["rock","paper","scissors","rock","paper","scissors","rock","paper","scissors","rock","paper","scissors"]
 
-		if choices not in ["stone","paper","scissors"]:
+		if choices not in ["rock","paper","scissors"]:
 			return await ctx.send("Select An valid arguments", hidden=True)
 
 		side = random.choice(side)
 		print(side)
-		if choices == "stone" and side == "paper":
+		if choices == "rock" and side == "paper":
 			embed = discord.Embed(description=f"{ctx.author.mention} choice: {choices}\n{self.bot.user.mention}: {side}\nWinner: {self.bot.user.mention}",colour=0xE74C3C)
 			embed.set_footer(text=ctx.guild.name, icon_url=ctx.guild.icon_url)
 			embed.timestamp = datetime.datetime.utcnow()
 			return await ctx.send(embed=embed)
 
-		if choices == "paper" and side == "stone":
+		if choices == "paper" and side == "rock":
 			embed = discord.Embed(description=f"{ctx.author.mention} choice: {choices}\n{self.bot.user.mention}: {side}\nWinner: {ctx.author.mention}",colour=0x2ECC71)
 			embed.set_footer(text=ctx.guild.name, icon_url=ctx.guild.icon_url)
 			embed.timestamp = datetime.datetime.utcnow()
 			return await ctx.send(embed=embed)
 
-		if choices == "scissors" and side =="stone":
+		if choices == "scissors" and side =="rock":
 			embed = discord.Embed(description=f"{ctx.author.mention} choice: {choices}\n{self.bot.user.mention}: {side}\nWinner: {self.bot.user.mention}",colour=0xE74C3C)
 			embed.set_footer(text=ctx.guild.name, icon_url=ctx.guild.icon_url)
 			embed.timestamp = datetime.datetime.utcnow()
 			return await ctx.send(embed=embed)
 
-		if choices == "stone" and side == "scissors":
+		if choices == "rock" and side == "scissors":
 			embed = discord.Embed(description=f"{ctx.author.mention} choice: {choices}\n{self.bot.user.mention}: {side}\nWinner: {ctx.author.mention}",colour=0x2ECC71)
 			embed.set_footer(text=ctx.guild.name, icon_url=ctx.guild.icon_url)
 			embed.timestamp = datetime.datetime.utcnow()
