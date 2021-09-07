@@ -34,16 +34,16 @@ class Events(commands.Cog):
         print(f"{self.__class__.__name__} Cog has been loaded\n-----")
 
     
-    #@commands.Cog.listener()
-    #async def on_slash_command_error(self, ctx, ex):
-    #    if isinstance(ex, commands.MissingPermissions):
-    #        await ctx.send("Hey! You lack permission to use this command.")
-    #    elif isinstance(ex, commands.MissingAnyRole):
-    #       await ctx.send("Hey! You lack permission to use this command.")
-    #    else:
-    #        embed = discord.Embed(color=0xE74C3C, 
-    #            description=f"Error: `{ex}`")
-    #        await ctx.send(embed=embed)
+    @commands.Cog.listener()
+    async def on_slash_command_error(self, ctx, ex):
+        if isinstance(ex, commands.MissingPermissions):
+            await ctx.send("Hey! You lack permission to use this command.")
+        elif isinstance(ex, commands.MissingAnyRole):
+           await ctx.send("Hey! You lack permission to use this command.")
+        else:
+            embed = discord.Embed(color=0xE74C3C, 
+                description=f"Error: `{ex}`")
+            await ctx.send(embed=embed)
     
 def setup(bot):
     bot.add_cog(Events(bot))
