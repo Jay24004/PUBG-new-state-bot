@@ -44,7 +44,7 @@ bot = commands.Bot(
     owner_ids=[391913988461559809, 488614633670967307, 301657045248114690],
     intents=intents,
 )
-slash = SlashCommand(bot, sync_commands=False, sync_on_cog_reload=True)
+slash = SlashCommand(bot, sync_commands=True, sync_on_cog_reload=True)
 DiscordComponents(bot)
 # change command_prefix='-' to command_prefix=get_prefix for custom prefixes
 bot.config_token = str(os.getenv('TOKEN'))
