@@ -44,13 +44,13 @@ class games(commands.Cog):
 		side = random.choice(['head', 'tail','head','tail','head','head','tail','tail','tail','head', 'head'])
 		print(side)
 		if choices == side:
-			embed = discord.Embed(title=f"{ctx.author.mention} You won!",colour=0x2ECC71)
+			embed = discord.Embed(title=f"{ctx.author} You won!",colour=0x2ECC71)
 			embed.set_footer(text="my badluck", icon_url=ctx.guild.icon_url)
 			embed.timestamp = datetime.datetime.utcnow()
 
 			await ctx.send(embed=embed)
 		if side != choices:
-			embed = discord.Embed(title=f"{ctx.author.mention} You Lost!",colour=0xE74C3C)
+			embed = discord.Embed(title=f"{ctx.author} You Lost!",colour=0xE74C3C)
 			embed.set_footer(text="Try again later", icon_url=ctx.guild.icon_url)
 			embed.timestamp = datetime.datetime.utcnow()
 
