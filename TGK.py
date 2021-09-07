@@ -67,16 +67,9 @@ bot.uptime = datetime.datetime.utcnow()
 async def on_ready():
     # On ready, print some details to standard out
     print(
-        f"-----\nLogged in as: {bot.user.name} : {bot.user.id}\n-----\nMy current prefix is: None\n-----")
-    """
-    currentMutes = await bot.mutes.get_all()
-    for mute in currentMutes:
-        bot.muted_users[mute["_id"]] = mute
+        f"-----\nLogged in as: {bot.user.name} : {bot.user.id}\n-----\nMy current prefix is: >\n-----")
+    await bot.change_presence(status=discord.Status.dnd)
 
-    currentBans = await bot.bans.get_all()
-    for ban in currentBans:
-        bot.ban_users[ban["_id"]] = ban
-    """    
     currentGive = await bot.give.get_all()
     for give in currentGive:
         bot.giveaway[give["_id"]] = give
@@ -132,14 +125,11 @@ if __name__ == "__main__":
     bot.mongo = motor.motor_asyncio.AsyncIOMotorClient(str(bot.connection_url))
     bot.db = bot.mongo["tgk_database"]
     bot.config = Document(bot.db, "config")
-    bot.mutes = Document(bot.db, "mutes")
-    bot.bans = Document(bot.db, "bans")
-    bot.warns = Document(bot.db, "warns")
     bot.give = Document(bot.db, "giveaway")
 
-
+    
     for file in os.listdir(cwd + "/cogs"):
         if file.endswith(".py") and not file.startswith("_") and not file.startswith("slash"):
             bot.load_extension(f"cogs.{file[:-3]}")
-
+    
     bot.run(bot.config_token)
