@@ -10,8 +10,10 @@ import datetime
 import discord
 import json
 import motor.motor_asyncio
+
 from humanfriendly import format_timespan
 from traceback import format_exception
+from discord_components import DiscordComponents, Button, ButtonStyle
 import asyncio
 from amari import AmariClient
 
@@ -42,7 +44,8 @@ bot = commands.Bot(
     owner_ids=[391913988461559809, 488614633670967307, 301657045248114690],
     intents=intents,
 )
-slash = SlashCommand(bot, sync_commands=True, sync_on_cog_reload=True)
+slash = SlashCommand(bot, sync_commands=False, sync_on_cog_reload=True)
+DiscordComponents(bot)
 # change command_prefix='-' to command_prefix=get_prefix for custom prefixes
 bot.config_token = str(os.getenv('TOKEN'))
 bot.connection_url = str(os.getenv('MONGO'))
@@ -67,8 +70,8 @@ bot.uptime = datetime.datetime.utcnow()
 async def on_ready():
     # On ready, print some details to standard out
     print(
-        f"-----\nLogged in as: {bot.user.name} : {bot.user.id}\n-----\nMy current prefix is: >\n-----")
-    await bot.change_presence(status=discord.Status.dnd)
+        f"-----\nLogged in as: {bot.user.name} : {bot.user.id}\n-----\nMy current prefix is: None\n-----")
+    await bot.change_presence(status=discord.Status.offline)
 
     currentGive = await bot.give.get_all()
     for give in currentGive:
@@ -131,5 +134,5 @@ if __name__ == "__main__":
     for file in os.listdir(cwd + "/cogs"):
         if file.endswith(".py") and not file.startswith("_") and not file.startswith("slash"):
             bot.load_extension(f"cogs.{file[:-3]}")
-    
+
     bot.run(bot.config_token)

@@ -62,12 +62,7 @@ class giveaway(commands.Cog):
 				try:
 					message = await channel.fetch_message(value['_id'])
 				except:
-					await self.bot.give.delete(value['_id'])
-					try:
-						self.bot.giveaway.pop(value['_id'])
-						return
-					except KeyError:
-						return
+					return
 
 				data = await self.bot.give.find(message.id)
 				host = guild.get_member(value['host'])
@@ -76,11 +71,6 @@ class giveaway(commands.Cog):
 				users = await message.reactions[0].users().flatten()
 				users.pop(users.index(guild.me))
 
-				try:
-					users.pop(users.index(host))
-				except:
-					pass
-
 				if len(users) < value['winners']:
 					embeds = message.embeds
 					for embed in embeds:
@@ -88,22 +78,21 @@ class giveaway(commands.Cog):
 
 					edict['title'] = f"{edict['title']} • Giveaway Has Ended"
 					edict['color'] = 15158332
+					edict['description'] = re.sub(r'(Ends)',r'Ended', edict['description'])
 					await message.edit(embed=embed.from_dict(edict))
 					small_embed = discord.Embed(description=f"No valid [entrants]({message.jump_url}) so the winner would not be determined!", color=0x2f3136)
 					await message.reply(embed=small_embed)
 					await self.bot.give.delete(message.id)
 					try:
-						return self.bot.giveaway.pop((data['_id']))
+						self.bot.giveaway.pop((data['_id']))
 					except KeyError:
-						return 
+						pass
+					return 
 
 				while True:
-
 					member = random.choice(users)
 					users.pop(users.index(member))
-					if type(member) == discord.Member and member in users and member.mention not in winner_list :
-						winner_list.append(member.mention)
-
+					winner_list.append(member.mention)
 					if len(winner_list) == value['winners']: break
 
 				if len(winner_list) >= value['winners']:
@@ -111,11 +100,13 @@ class giveaway(commands.Cog):
 					for embed in embeds:
 						gdata = embed.to_dict()
 					winners = ",".join(winner_list)
+					entries = await message.reactions[0].users().flatten()
 					small_embed = discord.Embed(description=f"Total Entries: [{len(entries)}]({message.jump_url})")
 					await message.reply(
-					f"**Giveaway Has Ended**\n<a:winners_emoji:867972307103141959>  **Prize**      <a:yellowrightarrow:801446308778344468> {gdata['title']}\n─────────────────────\n<a:pandaswag:801013818896941066>   **Host**      <a:yellowrightarrow:801446308778344468> {host.display_name}\n─────────────────────\n<a:winner:805380293757370369>  **Winner** <a:yellowrightarrow:801446308778344468> {winners}\n─────────────────────\n", embed=small_embed)
+					f"Congratulations {winners}! You won the {gdata['title']}",embed=small_embed)
 
 					gdata['title'] = f"{gdata['title']} • Giveaway Has Ended"
+					gdata['description'] = re.sub(r'(Ends)',r'Ended', gdata['description'])
 					gdata['color'] = 15158332
 					field = {'name': "Winner!", 'value': ", ".join(winner_list), 'inline': False}
 					try:
@@ -260,10 +251,6 @@ class giveaway(commands.Cog):
 						pass
 					return await message.remove_reaction(payload.emoji, user)
 
-		required['entries'].append(user.id)
-		await self.bot.give.upsert(required)
-		self.bot.giveaway[message.id] = required
-
 	@cog_ext.cog_slash(name="gstart",description="A giveaway command", guild_ids=guild_ids,default_permission=False,
 		permissions=admin_perms,
 		options=[
@@ -327,7 +314,6 @@ class giveaway(commands.Cog):
 				"channel": ctx.channel.id,
 				"host": ctx.author.id,
 				"winners": winners,
-				"entries": [],
 				"end_time": time,
 				"start_time": datetime.datetime.now(),
 				"weekly_amari": weekly_amari,
@@ -343,13 +329,14 @@ class giveaway(commands.Cog):
 		except:
 			data['b_role'] = None
 
-		await self.bot.give.upsert(data)
-		self.bot.giveaway[msg.id] = data
 		await msg.add_reaction("🎉")
 		if ping == None:
 			pass
 		else:
 			await ctx.channel.send(ping.mention)
+
+		await self.bot.give.upsert(data)
+		self.bot.giveaway[msg.id] = data
 
 	@cog_ext.cog_slash(name="gend", description="Focre end an giveaway", guild_ids=guild_ids,default_permission=False,
 		permissions=admin_perms,
@@ -387,6 +374,7 @@ class giveaway(commands.Cog):
 				edict = embed.to_dict()
 
 			edict['title'] = f"{edict['title']} • Giveaway Has Ended"
+			edict['description'] = re.sub('Ends', 'Ended', edict['description'])
 			edict['color'] = 15158332
 			await message.edit(embed=embed.from_dict(edict))
 			small_embed = discord.Embed(description=f"No valid [entrants]({message.jump_url}), so winner not be determined!", color=0x2f3136)
