@@ -162,7 +162,7 @@ class games(commands.Cog):
 			embed.set_footer(text=ctx.guild.name, icon_url=ctx.guild.icon_url)
 			return await ctx.send(embed=embed)
 
-	@cog_ext.cog_slash(name="Score", description="Check Your Score",
+	@cog_ext.cog_slash(name="Scores", description="Check Your Score",
 		guild_ids=guild_ids, options=[
 				create_option(name="game", description="Select game",required=True, option_type=3,choices=[
 					create_choice(name="Cointoss",value='coin'),
