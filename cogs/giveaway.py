@@ -524,7 +524,7 @@ class giveaway(commands.Cog):
 		await self.bot.config.upsert(data)
 		await ctx.send(f"{role.mention} is added to bypass list", hidden=True)
 
-	@cog_ext.cog_slash(name="bypasslist", description="Send the Bypass role list", guild_ids=guild_ids)
+	@cog_ext.cog_slash(name="bypasslist", description="Send the Bypass role list", guild_ids=guild_ids, default_permission=False, permissions=admin_perms)
 	async def bypasslist(self, ctx):
 		data = await self.bot.config.find(ctx.guild.id)
 		lists = []
@@ -536,7 +536,7 @@ class giveaway(commands.Cog):
 
 		await ctx.send(embed=embed, hidden=False)
 
-	@cog_ext.cog_slash(name="blacklist", description="Send the blacklist role list", guild_ids=guild_ids)
+	@cog_ext.cog_slash(name="blacklist", description="Send the blacklist role list", guild_ids=guild_ids, default_permission=False, permissions=admin_perms)
 	async def blacklistl(self, ctx):
 		data = await self.bot.config.find(ctx.guild.id)
 		lists = []
