@@ -191,13 +191,13 @@ class games(commands.Cog):
 			await ctx.send(embed=embed, hidden=False)
 		if game == 'rps':
 			embed = discord.Embed(title=f"{user.name} RPS stats",colour=user.colour,
-				description=f"**Win**: {data['cointoss']['win']}\n**Lose**: {data['cointoss']['lost']}")
+				description=f"**Win**: {data['rps']['win']}\n**Lose**: {data['rps']['lost']}")
 			embed.set_footer(text=ctx.guild.name, icon_url=ctx.guild.icon_url)
 			embed.timestamp = datetime.datetime.utcnow()
 			await ctx.send(embed=embed, hidden=False)
 		if game == 'tic_tac':
 			embed = discord.Embed(title=f"{user.name} TicTacToe stats",colour=user.colour,
-				description=f"**Win**: {data['cointoss']['win']}\n**Tie**: {data['tic_tac']['tie']}\n**Lose**: {data['cointoss']['lost']}")
+				description=f"**Win**: {data['tic_tac']['win']}\n**Tie**: {data['tic_tac']['tie']}\n**Lose**: {data['tic_tac']['lost']}")
 			embed.set_footer(text=ctx.guild.name, icon_url=ctx.guild.icon_url)
 			embed.timestamp = datetime.datetime.utcnow()
 			await ctx.send(embed=embed, hidden=False)

@@ -3,5 +3,6 @@ __pycache__
 *.pyc
 *.pyc
 cogs/moderation.txt
+cogs/misc.text
 .env
 cogs/test.py
