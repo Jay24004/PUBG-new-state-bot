@@ -154,7 +154,7 @@ class TicTacToe(commands.Cog):
         self.bot: commands.Bot = bot
 
     @cog_ext.cog_slash(
-        name="tic_tac_toe",
+        name="TicTacToe",
         description="Start a game of tic tac toe",
         guild_ids=guild_ids,
     )

@@ -21,7 +21,7 @@ class games(commands.Cog):
 		print(f"{self.__class__.__name__} has been loaded")
 
 
-	@cog_ext.cog_slash(name="cointoss", description="Coin-toss game",guild_ids=guild_ids,
+	@cog_ext.cog_slash(name="Cointoss", description="Coin-toss game",guild_ids=guild_ids,
 		options=[
 				create_option(name="choices",
 					description="Heads or Tails",
@@ -56,7 +56,7 @@ class games(commands.Cog):
 
 			await ctx.send(embed=embed)
 
-	@cog_ext.cog_slash(name="rps", description="Play Rock-Paper-Scissors",guild_ids=guild_ids,
+	@cog_ext.cog_slash(name="RPS", description="Play Rock-Paper-Scissors",guild_ids=guild_ids,
 		options=[
 				create_option(name="choices",
 					description="rock/paper/scissors",
