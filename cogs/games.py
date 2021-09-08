@@ -24,7 +24,7 @@ class games(commands.Cog):
 	@cog_ext.cog_slash(name="cointoss", description="Coin-toss game",guild_ids=guild_ids,
 		options=[
 				create_option(name="choices",
-					description="Head / Tail",
+					description="Heads or Tails",
 					required=True,
 					option_type=3,
 					choices=[
@@ -56,7 +56,7 @@ class games(commands.Cog):
 
 			await ctx.send(embed=embed)
 
-	@cog_ext.cog_slash(name="rpc", description="Play Rock-Paper-Scissors",guild_ids=guild_ids,
+	@cog_ext.cog_slash(name="rps", description="Play Rock-Paper-Scissors",guild_ids=guild_ids,
 		options=[
 				create_option(name="choices",
 					description="rock/paper/scissors",

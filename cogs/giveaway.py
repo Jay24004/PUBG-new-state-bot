@@ -14,6 +14,7 @@ from discord_slash.model import SlashCommandPermissionType
 from amari import AmariClient
 
 time_regex = re.compile("(?:(\d{1,5})(h|s|m|d))+?")
+
 time_dict = {"h": 3600, "s": 1, "m": 60, "d": 86400}
 guild_ids=[829615142450495601]
 
@@ -54,14 +55,20 @@ class giveaway(commands.Cog):
 		currentTime = datetime.datetime.now()
 		giveaway = deepcopy(self.bot.giveaway)
 		for key, value in giveaway.items():
+			print(key, value)
 			ftime = value['start_time'] + relativedelta(seconds=value['end_time'])
 
 			if currentTime >= ftime:
 				guild = self.bot.get_guild(value['guild'])
 				channel = guild.get_channel(value['channel'])
 				try:
-					message = await channel.fetch_message(value['_id'])
+					message = await channel.fetch_message(int(value['_id']))
 				except:
+					await self.bot.give.delete(message.id)
+					try:
+						self.bot.giveaway.pop(message.id)
+					except KeyError:
+						pass
 					return
 
 				data = await self.bot.give.find(message.id)
@@ -80,7 +87,7 @@ class giveaway(commands.Cog):
 					edict['color'] = 15158332
 					edict['description'] = re.sub(r'(Ends)',r'Ended', edict['description'])
 					await message.edit(embed=embed.from_dict(edict))
-					small_embed = discord.Embed(description=f"No valid [entrants]({message.jump_url}) so the winner would not be determined!", color=0x2f3136)
+					small_embed = discord.Embed(description=f"No valid [entrants]({message.jump_url}) so the winner could not be determined", color=0x2f3136)
 					await message.reply(embed=small_embed)
 					await self.bot.give.delete(message.id)
 					try:
@@ -232,7 +239,7 @@ class giveaway(commands.Cog):
 						pass
 					else:
 						embed = discord.Embed(title="Entery Decline:",
-							description=f"Your Entery for this [Giveaway]({message.jump_url}) has been declined\nReason:You don't have Required Weekly Amari `{required['weekly_amari']}`", color=0xE74C3C)
+							description=f"Your Entry to this [Giveaway]({message.jump_url}).has been denied.\nReason:You don't have the required Weekly Amari points `{required['weekly_amari']}`", color=0xE74C3C)
 						embed.timestamp = datetime.datetime.utcnow()
 						embed.set_footer(text=guild.name,icon_url=guild.icon_url)
 						try:
@@ -267,7 +274,7 @@ class giveaway(commands.Cog):
 	async def gstart(self, ctx, time, price, winners,required_role=None, bypass_role=None, amari_level: int=None, weekly_amari: int=None, ping:discord.Role=None):
 		time = await TimeConverter().convert(ctx, time)
 		if time < 15:
-			return await ctx.send("Giveaway time needed to be longer than 15 seconds")
+			return await ctx.send("Giveaway time needs to be longer than 15 seconds", hidden=True)
 		end_time = datetime.datetime.now() + datetime.timedelta(seconds=time)
 		end_time = round(end_time.timestamp())
 		required_role = required_role if required_role else None
@@ -376,9 +383,9 @@ class giveaway(commands.Cog):
 			edict['description'] = re.sub('Ends', 'Ended', edict['description'])
 			edict['color'] = 15158332
 			await message.edit(embed=embed.from_dict(edict))
-			small_embed = discord.Embed(description=f"No valid [entrants]({message.jump_url}), so winner not be determined!", color=0x2f3136)
+			small_embed = discord.Embed(description=f"No valid [entrants]({message.jump_url})so the winner could not be determined", color=0x2f3136)
 			await message.reply(embed=small_embed)
-			await ctx.send(embed=small_embed)
+			await ctx.send(embed=small_embed, hidden=True)
 			await self.bot.give.delete(message.id)
 			try:
 				return self.bot.giveaway.pop((data['_id']))
@@ -424,17 +431,15 @@ class giveaway(commands.Cog):
 		message = await channel.fetch_message(message_id)
 
 		if message.author.id != self.bot.user.id:
-			return await ctx.send("That message is not an giveaway")
+			return await ctx.send("That message is not an giveaway", hidden=True)
 
 		users = await message.reactions[0].users().flatten()
 		users.pop(users.index(ctx.guild.me))
 		entries = await message.reactions[0].users().flatten()
 		entries.pop(entries.index(ctx.guild.me))
 
-		if len(users) == 0:
-			return await ctx.send("No winner found as there no reactions")
-		if len(users) < winners:
-			return await ctx.send(f"no winners found as there no reactions to meet {winners} requirment")
+		if len(users) == 0: return await ctx.send("No winner found as there no reactions", hidden=True)
+		if len(users) < winners: return await ctx.send(f"no winners found as there no reactions to meet {winners} requirment", hidden=True)
 		
 		winner_list = []
 		while True:
@@ -448,32 +453,38 @@ class giveaway(commands.Cog):
 				break
 
 		reply = ",".join(winner_list)
-		for embed in message.embeds:
-			gdata = embed.to_ditc()
+		embeds = message.embeds
+		for embed in embeds:
+			gdata = embed.to_dict()
+
 		gdata['fields'] = []
 		gdata['color'] = 15158332
 		field = {'name': "Winner!", 'value': ", ".join(winner_list), 'inline': False}
+		price = re.sub(r'( • )(Giveaway Has Ended)', r'',gdata['title'])
 		gdata['fields'].append(field)
 
-		await ctx.send(f"**Price**: {gdata['title']}\n**Winners**: {reply}\n**Total Entries**: {len(entries)}", hidden=False)
+		await ctx.send(f"**Price**: {price}\n**Winners**: {reply}\n**Total Entries**: {len(entries)}", hidden=True)
 		await message.edit(embed=embed.from_dict(gdata))
 		await message.reply(
-			f"**New Winners**\nWinners: {reply}")
+			f"Congratulations {reply}! You won the {price}")
 
 	@cog_ext.cog_slash(name="gdelete", description="Delete a giveaway", guild_ids=guild_ids,default_permission=False,
 		permissions=admin_perms,
 		options=[
-				create_option(name="message_id", description="message id of the giveaway message", required=True, option_type=3)
+				create_option(name="message_id", description="message id of the giveaway message", required=True, option_type=3),
+				create_option(name="channel", description="channel of the giveaway", required=True, option_type=7)
 			]
 		)
-	async def gdelete(self, ctx, message_id:int ):
-		data = await self.bot.give.find(message_id)
-		if data is None: return await ctx.send("please Check message id", hidden=True)
+	async def gdelete(self, ctx, message_id:int , channel: discord.TextChannel):
+
+		message = await channel.fetch_message(int(message_id))
+		data = await self.bot.give.find_by_custom({'_id': message.id, 'channel': channel.id, 'guild': ctx.guild.id})
+		if data is None: return await ctx.send("Ether giveaway is ended or your message id is wrong", hidden=True)
 		channel = self.bot.get_channel(data['channel'])
 		message = await channel.fetch_message(data['_id'])
 		await message.delete()
 		await ctx.send("Your giveaway Has been delete", hidden=True)
-		await self.bot.give.delete(message_id)
+		await self.bot.give.delete(message.id)
 		try:
 			self.bot.giveaway.pop(message.id)
 		except KeyError:
@@ -533,7 +544,7 @@ class giveaway(commands.Cog):
 			lists.append(role.mention)
 
 		embed = discord.Embed(title="blacklist Role list", description=", ".join(lists), color=0x2f3136)
-		await ctx.send(embed=embed)
+		await ctx.send(embed=embed)	
 
 def setup(bot):
 	bot.add_cog(giveaway(bot))
