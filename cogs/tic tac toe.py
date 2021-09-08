@@ -209,10 +209,25 @@ class TicTacToe(commands.Cog):
 
         if determine_win_state(_board, GameState.player):
             winner = ctx.author.mention
+            data = await self.bot.score.find(ctx.author.id)
+            if data is None:
+                data = {'_id': ctx.author.id,'rps': {'win': 0, 'lost': 0},'tic_tac':  {'win': 0, 'lost': 0, 'tie': 0},'cointoss':  {'win': 0, 'lost': 0}}
+            data['tic_tac']['win'] += 1
+            await self.bot.score.upsert(data)
         elif determine_win_state(_board, GameState.ai):
             winner = self.bot.user.mention
+            data = await self.bot.score.find(ctx.author.id)
+            if data is None:
+                data = {'_id': ctx.author.id,'rps': {'win': 0, 'lost': 0},'tic_tac':  {'win': 0, 'lost': 0, 'tie': 0},'cointoss':  {'win': 0, 'lost': 0}}
+            data['tic_tac']['lost'] += 1
+            await self.bot.score.upsert(data)
         elif len(determine_possible_positions(_board)) == 0:
             winner = "Nobody"
+            data = await self.bot.score.find(ctx.author.id)
+            if data is None:
+                data = {'_id': ctx.author.id,'rps': {'win': 0, 'lost': 0},'tic_tac':  {'win': 0, 'lost': 0, 'tie': 0},'cointoss':  {'win': 0, 'lost': 0}}
+            data['tic_tac']['tie'] += 1
+            await self.bot.score.upsert(data)
         else:
             winner = None
 
