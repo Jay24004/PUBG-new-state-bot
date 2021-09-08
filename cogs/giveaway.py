@@ -338,7 +338,7 @@ class giveaway(commands.Cog):
 		await self.bot.give.upsert(data)
 		self.bot.giveaway[msg.id] = data
 
-	@cog_ext.cog_slash(name="gend", description="Focre end an giveaway", guild_ids=guild_ids,default_permission=False,
+	@cog_ext.cog_slash(name="gend", description="Force end a giveaway", guild_ids=guild_ids,default_permission=False,
 		permissions=admin_perms,
 		options=[
 				create_option(name="message_id", description="message id of the giveaway", required=True, option_type=3)
