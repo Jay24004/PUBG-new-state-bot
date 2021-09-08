@@ -23,6 +23,7 @@ admin_perms = {
 	create_permission(567374379575672852, SlashCommandPermissionType.USER, True),
 	create_permission(488614633670967307, SlashCommandPermissionType.USER, True),
 	create_permission(829615142450495609, SlashCommandPermissionType.ROLE, True),
+	create_permission(829615142450495608, SlashCommandPermissionType.ROLE, True)
 	]
 }
 
@@ -221,7 +222,7 @@ class giveaway(commands.Cog):
 						return await message.remove_reaction(payload.emoji, user)
 				else:
 					embed = discord.Embed(title="Entery Decline:",
-						description=f"Your Entery for this [Giveaway]({message.jump_url}) has been declined\nReason:Required amari level to join the giveaway`{required['amari_level']}`", color=0xE74C3C)
+						description=f"Your Entery for this [Giveaway]({message.jump_url}) has been declined\nReason:Required amari level to join the giveaway `{required['amari_level']}`", color=0xE74C3C)
 					embed.timestamp = datetime.datetime.utcnow()
 					embed.set_footer(text=guild.name,icon_url=guild.icon_url)
 					try:
