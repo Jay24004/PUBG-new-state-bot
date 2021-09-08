@@ -86,7 +86,7 @@ async def on_ready():
     # On ready, print some details to standard out
     print(
         f"-----\nLogged in as: {bot.user.name} : {bot.user.id}\n-----\nMy current prefix is: None\n-----")
-    await bot.change_presence(status=discord.Status.offline)
+    await bot.change_presence(status=discord.Status.dnd)
 
     currentGive = await bot.give.get_all()
     for give in currentGive:

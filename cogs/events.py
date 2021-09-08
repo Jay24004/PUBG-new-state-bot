@@ -22,7 +22,7 @@ class Events(commands.Cog):
     async def change_status(self):      
         guild = await self.bot.fetch_guild(829615142450495601)
         activity = f'over {len(guild.members)} members '
-        await self.bot.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name=f"{activity}"),status=discord.Status.offline)
+        await self.bot.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name=f"{activity}"),status=discord.Status.dnd)
 
     @change_status.before_loop
     async def before_change_status(self):
