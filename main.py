@@ -117,6 +117,7 @@ if __name__ == "__main__":
     bot.db = bot.mongo["tgk_database"]
     bot.config = Document(bot.db, "config")
     bot.give = Document(bot.db, "giveaway")
+    bot.score = Document(bot.db, "score")
 
     
     for file in os.listdir(cwd + "/cogs"):
