@@ -29,11 +29,11 @@ class games(commands.Cog):
 					option_type=3,
 					choices=[
 					create_choice(
-							name='head',
+							name='Head',
 							value="head"
 						),
 					create_choice(
-						name="tail",
+						name="Tail",
 						value="tail"
 						)
 					]
@@ -64,7 +64,7 @@ class games(commands.Cog):
 					option_type=3,
 					choices=[
 					create_choice(
-							name='rock',
+							name='Rock',
 							value="rock"
 						),
 					create_choice(
@@ -72,7 +72,7 @@ class games(commands.Cog):
 						value="paper"
 						),
 					create_choice(
-						name="scissors",
+						name="Scissors",
 						value="scissors"
 						)
 					]
@@ -80,6 +80,7 @@ class games(commands.Cog):
 			]
 	)
 	async def spc(self, ctx, choices: str):
+		choices = choices.lower()
 		side = ["rock","paper","scissors","rock","paper","scissors","rock","paper","scissors","rock","paper","scissors"]
 
 		if choices not in ["rock","paper","scissors"]:
