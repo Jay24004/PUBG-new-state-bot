@@ -100,6 +100,7 @@ class games(commands.Cog):
 			embed = discord.Embed(description=f"{ctx.author.mention} choice: {choices}\n{self.bot.user.mention}: {side}\nWinner: {self.bot.user.mention}",colour=0xE74C3C)
 			embed.set_footer(text=ctx.guild.name, icon_url=ctx.guild.icon_url)
 			embed.timestamp = datetime.datetime.utcnow()
+			data = await self.bot.score.find(ctx.author.id)
 			if data is None:
 				data = {'_id': ctx.author.id,'rps': {'win': 0, 'lost': 0},'tic_tac':  {'win': 0, 'lost': 0, 'tie': 0},'cointoss':  {'win': 0, 'lost': 0}}
 			data['rps']['lost'] += 1
