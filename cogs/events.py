@@ -40,6 +40,20 @@ class Events(commands.Cog):
             await ctx.send("Hey! You lack permission to use this command.")
         elif isinstance(ex, commands.MissingAnyRole):
            await ctx.send("Hey! You lack permission to use this command.")
+        elif isinstance(ex, commands.CommandOnCooldown):
+            # If the command is currently on cooldown trip this
+            m, s = divmod(ex.retry_after, 60)
+            h, m = divmod(m, 60)
+            if int(h) == 0 and int(m) == 0:
+                await ctx.send(f" You must wait {int(s)} seconds to use this command!",hidden=True)
+            elif int(h) == 0 and int(m) != 0:
+                await ctx.send(
+                    f" You must wait {int(m)} minutes and {int(s)} seconds to use this command!",hidden=True
+                )
+            else:
+                await ctx.send(
+                    f" You must wait {int(h)} hours, {int(m)} minutes and {int(s)} seconds to use this command!",hidden=True
+                )
         else:
             embed = discord.Embed(color=0xE74C3C, 
                 description=f"Error: `{ex}`")

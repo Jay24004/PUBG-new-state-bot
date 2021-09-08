@@ -60,20 +60,20 @@ class reddit(commands.Cog):
 				),
 			])
 		])
+	@commands.cooldown(3,60 , commands.BucketType.user)
 	async def reddit(self, ctx, reddit: str):
 		await ctx.defer()
-		subreddit = reddit_api.subreddit(reddit)
-		allsubs = []
-		top = subreddit.top(limit = 50)
-		for submission in top: 
-			allsubs.append(submission)
+		
+		#top = subreddit.top(limit = 100)
+		#for submission in top: 
+		#	allsubs.append(submission)
 
-		post = random.choice(allsubs)
+		#post = random.choice(allsubs)
 
-		extension = post.url[len(post.url) - 3 :].lower()
-		print(extension)
-		while extension != "jpg" or "png":
-			post = random.choice(allsubs)
+		#extension = post.url[len(post.url) - 3 :].lower()
+		#print(extension)
+		while True:
+			post = reddit_api.subreddit(reddit).random()
 			extension = post.url[len(post.url) - 3 :].lower()
 			print(extension)
 			if extension == "jpg" or "png": break

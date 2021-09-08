@@ -158,6 +158,7 @@ class TicTacToe(commands.Cog):
         description="Start a game of tic tac toe",
         guild_ids=guild_ids,
     )
+    @commands.cooldown(3,60 , commands.BucketType.user)
     async def ttt_start(self, ctx: SlashContext):
         await ctx.send(
             content=f"{ctx.author.mention}'s tic tac toe game",
