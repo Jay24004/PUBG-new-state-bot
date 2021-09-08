@@ -33,7 +33,7 @@ class Events(commands.Cog):
     async def on_ready(self):
         print(f"{self.__class__.__name__} Cog has been loaded\n-----")
 
-    """
+    
     @commands.Cog.listener()
     async def on_slash_command_error(self, ctx, ex):
         if isinstance(ex, commands.MissingPermissions):
@@ -44,6 +44,6 @@ class Events(commands.Cog):
             embed = discord.Embed(color=0xE74C3C, 
                 description=f"Error: `{ex}`")
             await ctx.send(embed=embed)
-    """
+
 def setup(bot):
     bot.add_cog(Events(bot))
