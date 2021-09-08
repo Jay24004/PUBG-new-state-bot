@@ -20,7 +20,7 @@ class Events(commands.Cog):
 
     @tasks.loop(seconds=60)
     async def change_status(self):      
-        guild = await self.bot.fetch_guild(829615142450495601)
+        guild = self.bot.get_guild(829615142450495601)
         activity = f'over {len(guild.members)} members '
         await self.bot.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name=f"{activity}"),status=discord.Status.dnd)
 

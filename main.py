@@ -96,8 +96,7 @@ async def on_ready():
 
 @bot.event
 async def on_command_error(error, ctx):
-    embed = discord.Embed(description=f"Error: {error}")
-    await ctx.send(embed=embed)
+    return
 
 @bot.command(hidden=True)
 @commands.is_owner()
