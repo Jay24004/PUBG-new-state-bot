@@ -153,9 +153,8 @@ class TicTacToe(commands.Cog):
     def __init__(self, bot):
         self.bot: commands.Bot = bot
 
-    @cog_ext.cog_subcommand(
-        base="tic_tac_toe",
-        name="start",
+    @cog_ext.cog_slash(
+        name="tic_tac_toe",
         description="Start a game of tic tac toe",
         guild_ids=guild_ids,
     )
