@@ -63,20 +63,11 @@ class reddit(commands.Cog):
 	@commands.cooldown(3,60 , commands.BucketType.user)
 	async def reddit(self, ctx, reddit: str):
 		await ctx.defer()
-		
-		#top = subreddit.top(limit = 100)
-		#for submission in top: 
-		#	allsubs.append(submission)
-
-		#post = random.choice(allsubs)
-
-		#extension = post.url[len(post.url) - 3 :].lower()
-		#print(extension)
 		while True:
 			post = reddit_api.subreddit(reddit).random()
-			extension = post.url[len(post.url) - 3 :].lower()
-			print(extension)
-			if extension == "jpg" or "png": break
+			match = re.findall("(\.png$|.jpg$)", post.url)
+			
+			if match: break
 
 		embed = discord.Embed(description=f"**{post.title}**\nPosted By: {post.author}\nTotal upvotes: {post.score}\nPost Link: [here](https://www.reddit.com/{post.permalink})",color=ctx.author.colour)
 		embed.set_image(url=post.url)
