@@ -78,7 +78,7 @@ bot.event_channel = {}
 bot.perm = {}
 bot.giveaway = {}
 bot.mod_role = [797923152617275433, 848585998769455104]
-bot.version = "4.1"
+bot.version = "0.5"
 bot.uptime = datetime.datetime.utcnow()
 
 @bot.event
@@ -118,7 +118,6 @@ if __name__ == "__main__":
     bot.give = Document(bot.db, "giveaway")
     bot.score = Document(bot.db, "score")
 
-    
     for file in os.listdir(cwd + "/cogs"):
         if file.endswith(".py") and not file.startswith("_") and not file.startswith("slash"):
             bot.load_extension(f"cogs.{file[:-3]}")
