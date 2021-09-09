@@ -6,16 +6,18 @@ import psutil
 import time
 import platform
 import random
+import datetime
 import traceback
 import datetime
 from humanfriendly import format_timespan
 import utils.json_loader
+from discord_slash import cog_ext, SlashContext, cog_ext, SlashContext
 
 
 from discord.ext import commands
 
 description = "Some Basic commands"
-
+guild_ids=[829615142450495601]
 
 class Basic(commands.Cog, description=description):
     def __init__(self, bot):
@@ -49,8 +51,8 @@ class Basic(commands.Cog, description=description):
 
         await message.edit(content=None, embed=embed)
 
-    @commands.command(
-        name="stats", description="A useful command that displays bot statistics.", usage="stats"
+    @cog_ext.cog_slash(
+        name="stats", description="A useful command that displays bot statistics.",guild_ids=guild_ids
     )
     async def stats(self, ctx):
         pythonVersion = platform.python_version()
@@ -61,9 +63,8 @@ class Basic(commands.Cog, description=description):
 
         embed = discord.Embed(
             title=f"{self.bot.user.name} Stats",
-            description="\uFEFF",
             colour=ctx.author.colour,
-            timestamp=ctx.message.created_at,
+            timestamp=datetime.datetime.utcnow(),
         )
 
         embed.add_field(name="Bot Version:", value=self.bot.version)
@@ -75,16 +76,10 @@ class Basic(commands.Cog, description=description):
         embed.add_field(name="RAM Useage:",
                         value=f"{round(psutil.virtual_memory().percent,1)}%")
         embed.add_field(name="Bot Developers:",
-                        value="<@488614633670967307>\n<@301657045248114690>")
-        embed.add_field(name="Embed Format:",
-                        value="<@413651113485533194>\n<@651711446081601545>")
-
+                        value="<@488614633670967307>")
         embed.set_footer(
-            text=f"Developed by Jay & Utik007 | {self.bot.user.name}")
-        embed.set_author(name=self.bot.user.name,
-                         icon_url=self.bot.user.avatar_url)
-
-        await ctx.send(embed=embed)
+            text=f"Developed by Jay | {self.bot.user.name}",icon_url=self.bot.user.avatar_url)
+        await ctx.send(embed=embed, delete_after=60)
 
 
 def setup(bot):
