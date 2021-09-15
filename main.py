@@ -94,9 +94,24 @@ async def on_ready():
 
     print("Database Connected\n-----")
 
-@bot.event
-async def on_command_error(error, ctx):
-    return
+#@bot.event
+#async def on_command_error(error, ctx):
+    #return
+
+@bot.command(hidden=True)
+@commands.is_owner()
+async def load(ctx, extension: str):
+    bot.load_extension(f'cogs.{extension}')
+
+    await ctx.send(f'The {extension} is successfully Loaded.')
+
+@bot.command(hidden=True)
+@commands.is_owner()
+async def unload(ctx, extension: str):
+    bot.unload_extension(f'cogs.{extension}')
+
+    await ctx.send(f'The {extension} is successfully unloaded.')
+
 
 @bot.command(hidden=True)
 @commands.is_owner()
@@ -119,7 +134,7 @@ if __name__ == "__main__":
     bot.score = Document(bot.db, "score")
 
     for file in os.listdir(cwd + "/cogs"):
-        if file.endswith(".py") and not file.startswith("_") and not file.startswith("slash"):
+        if file.endswith(".py") and not file.startswith("_") and not file.startswith("slash") and not file.startswith("test"):
             bot.load_extension(f"cogs.{file[:-3]}")
 
     bot.run(bot.config_token)

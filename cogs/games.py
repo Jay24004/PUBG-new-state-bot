@@ -12,10 +12,6 @@ class games(commands.Cog):
 	def __init__ (self, bot):
 		self.bot = bot
 
-
-
-
-
 	@commands.Cog.listener()
 	async def on_ready(self):
 		print(f"{self.__class__.__name__} has been loaded")
@@ -50,7 +46,7 @@ class games(commands.Cog):
 			embed.timestamp = datetime.datetime.utcnow()
 			data = await self.bot.score.find(ctx.author.id)
 			if data is None:
-				data = {'_id': ctx.author.id,'rps': {'win': 0, 'lost': 0},'tic_tac':  {'win': 0, 'lost': 0, 'tie': 0},'cointoss':  {'win': 0, 'lost': 0}}
+				data = {'_id': ctx.author.id,'rps': {'win': 0, 'lost': 0, 'tie': 0},'tic_tac':  {'win': 0, 'lost': 0, 'tie': 0},'cointoss':  {'win': 0, 'lost': 0}}
 			data['cointoss']['win'] += 1
 			await self.bot.score.upsert(data)
 			await ctx.send(embed=embed)
@@ -60,7 +56,7 @@ class games(commands.Cog):
 			embed.timestamp = datetime.datetime.utcnow()
 			data = await self.bot.score.find(ctx.author.id)
 			if data is None:
-				data = {'_id': ctx.author.id,'rps': {'win': 0, 'lost': 0},'tic_tac':  {'win': 0, 'lost': 0, 'tie': 0},'cointoss':  {'win': 0, 'lost': 0}}
+				data = {'_id': ctx.author.id,'rps': {'win': 0, 'lost': 0, 'tie': 0},'tic_tac':  {'win': 0, 'lost': 0, 'tie': 0},'cointoss':  {'win': 0, 'lost': 0}}
 			data['cointoss']['lost'] += 1
 			await self.bot.score.upsert(data)
 			await ctx.send(embed=embed)
@@ -73,15 +69,15 @@ class games(commands.Cog):
 					option_type=3,
 					choices=[
 					create_choice(
-							name='Rock',
+							name='🪨 Rock',
 							value="rock"
 						),
 					create_choice(
-						name="paper",
+						name=" 📰 paper",
 						value="paper"
 						),
 					create_choice(
-						name="Scissors",
+						name="✂️ Scissors",
 						value="scissors"
 						)
 					]
@@ -98,73 +94,72 @@ class games(commands.Cog):
 
 		side = random.choice(side)
 		if choices == "rock" and side == "paper":
-			embed = discord.Embed(description=f"{ctx.author.mention} choice: {choices}\n{self.bot.user.mention}: {side}\nWinner: {self.bot.user.mention}",colour=0xE74C3C)
+			embed = discord.Embed(title="Game Result:" ,description=f"{ctx.author.mention} choice: {choices}\n{self.bot.user.mention}: {side}\nWinner: {self.bot.user.mention}",colour=0xE74C3C)
 			embed.set_footer(text=ctx.guild.name, icon_url=ctx.guild.icon_url)
 			embed.timestamp = datetime.datetime.utcnow()
 			data = await self.bot.score.find(ctx.author.id)
 			if data is None:
-				data = {'_id': ctx.author.id,'rps': {'win': 0, 'lost': 0},'tic_tac':  {'win': 0, 'lost': 0, 'tie': 0},'cointoss':  {'win': 0, 'lost': 0}}
+				data = {'_id': ctx.author.id,'rps': {'win': 0, 'lost': 0, 'tie': 0},'tic_tac':  {'win': 0, 'lost': 0, 'tie': 0},'cointoss':  {'win': 0, 'lost': 0}}
 			data['rps']['lost'] += 1
 			await self.bot.score.upsert(data)
 			return await ctx.send(embed=embed)
-			return await ctx.send(embed=embed)
 
 		if choices == "paper" and side == "rock":
-			embed = discord.Embed(description=f"{ctx.author.mention} choice: {choices}\n{self.bot.user.mention}: {side}\nWinner: {ctx.author.mention}",colour=0x2ECC71)
+			embed = discord.Embed(title="Game Result:", description=f"{ctx.author.mention} choice: {choices}\n{self.bot.user.mention}: {side}\nWinner: {ctx.author.mention}",colour=0x2ECC71)
 			embed.set_footer(text=ctx.guild.name, icon_url=ctx.guild.icon_url)
 			embed.timestamp = datetime.datetime.utcnow()
 			data = await self.bot.score.find(ctx.author.id)
 			if data is None:
-				data = {'_id': ctx.author.id,'rps': {'win': 0, 'lost': 0},'tic_tac':  {'win': 0, 'lost': 0, 'tie': 0},'cointoss':  {'win': 0, 'lost': 0}}
+				data = {'_id': ctx.author.id,'rps': {'win': 0, 'lost': 0, 'tie': 0},'tic_tac':  {'win': 0, 'lost': 0, 'tie': 0},'cointoss':  {'win': 0, 'lost': 0}}
 			data['rps']['win'] += 1
 			await self.bot.score.upsert(data)
 			return await ctx.send(embed=embed)
 
 		if choices == "scissors" and side =="rock":
-			embed = discord.Embed(description=f"{ctx.author.mention} choice: {choices}\n{self.bot.user.mention}: {side}\nWinner: {self.bot.user.mention}",colour=0xE74C3C)
+			embed = discord.Embed(title="Game Result:" ,description=f"{ctx.author.mention} choice: {choices}\n{self.bot.user.mention}: {side}\nWinner: {self.bot.user.mention}",colour=0xE74C3C)
 			embed.set_footer(text=ctx.guild.name, icon_url=ctx.guild.icon_url)
 			embed.timestamp = datetime.datetime.utcnow()
 			data = await self.bot.score.find(ctx.author.id)
 			if data is None:
-				data = {'_id': ctx.author.id,'rps': {'win': 0, 'lost': 0},'tic_tac':  {'win': 0, 'lost': 0, 'tie': 0},'cointoss':  {'win': 0, 'lost': 0}}
+				data = {'_id': ctx.author.id,'rps': {'win': 0, 'lost': 0, 'tie': 0},'tic_tac':  {'win': 0, 'lost': 0, 'tie': 0},'cointoss':  {'win': 0, 'lost': 0}}
 			data['rps']['lost'] += 1
 			await self.bot.score.upsert(data)
 			return await ctx.send(embed=embed)
 
 		if choices == "rock" and side == "scissors":
-			embed = discord.Embed(description=f"{ctx.author.mention} choice: {choices}\n{self.bot.user.mention}: {side}\nWinner: {ctx.author.mention}",colour=0x2ECC71)
+			embed = discord.Embed(title="Game Result:", description=f"{ctx.author.mention} choice: {choices}\n{self.bot.user.mention}: {side}\nWinner: {ctx.author.mention}",colour=0x2ECC71)
 			embed.set_footer(text=ctx.guild.name, icon_url=ctx.guild.icon_url)
 			embed.timestamp = datetime.datetime.utcnow()
 			data = await self.bot.score.find(ctx.author.id)
 			if data is None:
-				data = {'_id': ctx.author.id,'rps': {'win': 0, 'lost': 0},'tic_tac':  {'win': 0, 'lost': 0, 'tie': 0},'cointoss':  {'win': 0, 'lost': 0}}
+				data = {'_id': ctx.author.id,'rps': {'win': 0, 'lost': 0, 'tie': 0},'tic_tac':  {'win': 0, 'lost': 0, 'tie': 0},'cointoss':  {'win': 0, 'lost': 0}}
 			data['rps']['win'] += 1
 			await self.bot.score.upsert(data)
 			return await ctx.send(embed=embed)			
 
 		if choices == "paper" and side == "scissors":
-			embed = discord.Embed(description=f"{ctx.author.mention} choice: {choices}\n{self.bot.user.mention}: {side}\nWinner: {self.bot.user.mention}",colour=0xE74C3C)
+			embed = discord.Embed(title="Game Result:", description=f"{ctx.author.mention} choice: {choices}\n{self.bot.user.mention}: {side}\nWinner: {self.bot.user.mention}",colour=0xE74C3C)
 			embed.set_footer(text=ctx.guild.name, icon_url=ctx.guild.icon_url)
 			embed.timestamp = datetime.datetime.utcnow()
 			data = await self.bot.score.find(ctx.author.id)
 			if data is None:
-				data = {'_id': ctx.author.id,'rps': {'win': 0, 'lost': 0},'tic_tac':  {'win': 0, 'lost': 0, 'tie': 0},'cointoss':  {'win': 0, 'lost': 0}}
+				data = {'_id': ctx.author.id,'rps': {'win': 0, 'lost': 0, 'tie': 0},'tic_tac':  {'win': 0, 'lost': 0, 'tie': 0},'cointoss':  {'win': 0, 'lost': 0}}
 			data['rps']['lost'] += 1
 			return await ctx.send(embed=embed)			
 
 		if choices == "scissors" and side == "paper":
-			embed = discord.Embed(description=f"{ctx.author.mention} choice: {choices}\n{self.bot.user.mention}: {side}\nWinner: {ctx.author.mention}",colour=0x2ECC71)
+			embed = discord.Embed(title="Game Result:", description=f"{ctx.author.mention} choice: {choices}\n{self.bot.user.mention}: {side}\nWinner: {ctx.author.mention}",colour=0x2ECC71)
 			embed.set_footer(text=ctx.guild.name, icon_url=ctx.guild.icon_url)
 			embed.timestamp = datetime.datetime.utcnow()
 			data = await self.bot.score.find(ctx.author.id)
 			if data is None:
-				data = {'_id': ctx.author.id,'rps': {'win': 0, 'lost': 0},'tic_tac':  {'win': 0, 'lost': 0, 'tie': 0},'cointoss':  {'win': 0, 'lost': 0}}
+				data = {'_id': ctx.author.id,'rps': {'win': 0, 'lost': 0, 'tie': 0},'tic_tac':  {'win': 0, 'lost': 0, 'tie': 0},'cointoss':  {'win': 0, 'lost': 0}}
 			data['rps']['win'] += 1
 			await self.bot.score.upsert(data)
 			return await ctx.send(embed=embed)
 
 		if choices == side:
-			embed = discord.Embed(description=f"{ctx.author.mention} choice: {choices}\n{self.bot.user.mention}: {side}\nWinner: None",colour=0x2ECC71)
+			embed = discord.Embed(title="Game Result:", description=f"{ctx.author.mention} choice: {choices}\n{self.bot.user.mention}: {side}\nWinner: None",colour=0x2ECC71)
 			embed.set_footer(text=ctx.guild.name, icon_url=ctx.guild.icon_url)
 			return await ctx.send(embed=embed)
 
@@ -189,7 +184,6 @@ class games(commands.Cog):
 			if user != ctx.author:
 				return await ctx.send(f"{user.name} hasn't played the game yet.")
 
-
 		if game == 'coin':
 			embed = discord.Embed(title=f"{user.name} Cointoss stats",colour=user.colour,
 				description=f"**Win**: {data['cointoss']['win']}\n**Lose**: {data['cointoss']['lost']}")
@@ -208,7 +202,6 @@ class games(commands.Cog):
 			embed.set_footer(text=ctx.guild.name, icon_url=ctx.guild.icon_url)
 			embed.timestamp = datetime.datetime.utcnow()
 			await ctx.send(embed=embed, hidden=False)
-
 
 def setup(bot):
 	bot.add_cog(games(bot))
