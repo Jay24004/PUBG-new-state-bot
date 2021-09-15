@@ -64,7 +64,7 @@ class Misc(commands.Cog):
 		await ctx.channel.send(f"Please refer to <#829615142672531462> for further information, {user}. Make sure to read through the channel before asking questions in the support channels, as your questions could have been answered there.")
 		await ctx.send("done",hidden=True)
 
-	@cog_ext.cog_slash(name="lang", guild_ids=guild_ids, description="When someone user other than English or Bangla",default_permission=False, permissions=staff_perm,
+	@cog_ext.cog_slash(name="lang", guild_ids=guild_ids, description="When someone uses other than English or Bangla",default_permission=False, permissions=staff_perm,
 		options=[create_option(name="user", description="Select users to reply", option_type=3,required=True),
 		]
 	)
@@ -72,7 +72,7 @@ class Misc(commands.Cog):
 		await ctx.channel.send(f"Please do not use any other language aside from Bangla and English in this channel. {user}")
 		await ctx.send("done",hidden=True)
 
-	@cog_ext.cog_slash(name="eng", guild_ids=guild_ids, description="When someone user other than English in general-eng",default_permission=False, permissions=staff_perm,
+	@cog_ext.cog_slash(name="eng", guild_ids=guild_ids, description="When someone uses other than English in general-eng",default_permission=False, permissions=staff_perm,
 		options=[create_option(name="user", description="Select users to reply", option_type=3,required=True),])
 	async def eng(self, ctx, user: str):
 		await ctx.channel.send(f"Please do not use any other language aside from English in this channel. {user}")
