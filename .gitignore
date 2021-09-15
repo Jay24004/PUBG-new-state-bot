@@ -4,5 +4,6 @@ __pycache__
 *.pyc
 cogs/moderation.txt
 cogs/misc.text
+cogs/admin.py
 .env
 cogs/test.py

@@ -13,7 +13,6 @@ import motor.motor_asyncio
 
 from humanfriendly import format_timespan
 from traceback import format_exception
-from discord_components import DiscordComponents, Button, ButtonStyle
 import asyncio
 from amari import AmariClient
 
@@ -60,7 +59,6 @@ bot = commands.Bot(
     intents=intents,
 )
 slash = SlashCommand(bot, sync_commands=True, sync_on_cog_reload=True)
-DiscordComponents(bot)
 # change command_prefix='-' to command_prefix=get_prefix for custom prefixes
 bot.config_token = str(os.getenv('TOKEN'))
 bot.connection_url = str(os.getenv('MONGO'))

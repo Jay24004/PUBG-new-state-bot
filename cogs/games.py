@@ -17,7 +17,7 @@ class games(commands.Cog):
 		print(f"{self.__class__.__name__} has been loaded")
 
 
-	@cog_ext.cog_slash(name="Cointoss", description="Coin-toss game",guild_ids=guild_ids,
+	@cog_ext.cog_slash(name="cointoss", description="Coin-toss game",guild_ids=guild_ids,
 		options=[
 				create_option(name="choices",
 					description="Heads or Tails",
