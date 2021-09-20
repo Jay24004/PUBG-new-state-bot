@@ -59,6 +59,9 @@ class reddit(commands.Cog):
 				name="r/CozyPlaces",
 				value="CozyPlaces"
 				),
+			create_choice(
+				name="r/outdoors",
+				value="outdoors"),
 			])
 		])
 	@commands.cooldown(3,60 , commands.BucketType.user)
