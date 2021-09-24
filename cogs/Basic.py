@@ -17,18 +17,23 @@ from discord_slash import cog_ext, SlashContext, cog_ext, SlashContext
 from discord.ext import commands
 
 description = "Some Basic commands"
-guild_ids=[829615142450495601]
+guild_ids=[829615142450495601, 814374218602512395]
 
 class Basic(commands.Cog, description=description):
     def __init__(self, bot):
         self.bot = bot
+
+    def is_me():
+        def predicate(ctx):
+            return ctx.message.author.id in [488614633670967307, 573896617082748951,573896617082748951]
+        return commands.check(predicate)
 
     @commands.Cog.listener()
     async def on_ready(self):
         print(f"{self.__class__.__name__} Cog has been loaded\n-----")
 
     @commands.command()
-    @commands.has_any_role(829615142672531459, 829615142450495609)
+    @is_me()
     async def ping(self, ctx):
         await ctx.message.delete()
         start_time = time.time()

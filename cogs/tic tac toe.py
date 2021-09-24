@@ -153,6 +153,10 @@ class TicTacToe(commands.Cog):
     def __init__(self, bot):
         self.bot: commands.Bot = bot
 
+    @commands.Cog.listener()
+    async def on_ready(self):
+        print(f"{self.__class__.__name__} Cog has been loaded\n-----")
+
     @cog_ext.cog_slash(
         name="TicTacToe",
         description="Start a game of tic tac toe",

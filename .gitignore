@@ -3,7 +3,6 @@ __pycache__
 *.pyc
 *.pyc
 cogs/moderation.txt
-cogs/misc.text
-cogs/admin.py
+cogs/slash.text
 .env
 cogs/test.py

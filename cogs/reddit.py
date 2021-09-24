@@ -26,7 +26,7 @@ class reddit(commands.Cog):
 
 	@commands.Cog.listener()
 	async def on_ready(self):
-		print(f"{self.__class__.__name__} has been loaded")
+		print(f"{self.__class__.__name__} Cog has been loaded\n-----")
 
 	@cog_ext.cog_slash(name="Reddit", description="Get some nice content from selected subreddits.",guild_ids=guild_ids,
 		options=[

@@ -35,20 +35,6 @@ cwd = Path(__file__).parents[0]
 cwd = str(cwd)
 print(f"{cwd}\n-----")
 
-
-staff_perm = {
-    829615142450495601:[
-    create_permission(567374379575672852, SlashCommandPermissionType.USER, True),
-    create_permission(488614633670967307, SlashCommandPermissionType.USER, True),
-    create_permission(829615142450495609, SlashCommandPermissionType.ROLE, True),
-    create_permission(829615142450495608, SlashCommandPermissionType.ROLE, True),
-    create_permission(829615142450495607, SlashCommandPermissionType.ROLE, True),
-    create_permission(829615142450495603, SlashCommandPermissionType.ROLE, True)
-    ]
-
-}
-
-
 intents = discord.Intents.all()  # Help command requires member intents
 DEFAULTPREFIX = "!"
 bot = commands.Bot(
@@ -66,18 +52,29 @@ bot.amari = str(os.getenv('AMARI'))
 
 logging.basicConfig(level=logging.INFO)
 
-bot.muted_users = {}
-bot.ban_users = {}
+
 bot.blacklist_user = {}
 bot.guild_id = [797920317871357972]
-bot.ticket_setups = {}
 bot.cwd = cwd
-bot.event_channel = {}
 bot.perm = {}
 bot.giveaway = {}
-bot.mod_role = [797923152617275433, 848585998769455104]
 bot.version = "0.5"
 bot.uptime = datetime.datetime.utcnow()
+
+guild_ids = [814374218602512395, 829615142450495601]
+owner_perm = {
+    814374218602512395:[
+    create_permission(567374379575672852, SlashCommandPermissionType.USER, True),
+    create_permission(488614633670967307, SlashCommandPermissionType.USER, True),
+    create_permission(573896617082748951, SlashCommandPermissionType.USER, True)
+    ],
+    829615142450495601:[
+    create_permission(567374379575672852, SlashCommandPermissionType.USER, True),
+    create_permission(488614633670967307, SlashCommandPermissionType.USER, True),
+    create_permission(573896617082748951, SlashCommandPermissionType.USER, True)
+    ]
+
+}
 
 @bot.event
 async def on_ready():
@@ -92,24 +89,10 @@ async def on_ready():
 
     print("Database Connected\n-----")
 
-#@bot.event
-#async def on_command_error(error, ctx):
-    #return
-
-@bot.command(hidden=True)
-@commands.is_owner()
-async def load(ctx, extension: str):
-    bot.load_extension(f'cogs.{extension}')
-
-    await ctx.send(f'The {extension} is successfully Loaded.')
-
-@bot.command(hidden=True)
-@commands.is_owner()
-async def unload(ctx, extension: str):
-    bot.unload_extension(f'cogs.{extension}')
-
-    await ctx.send(f'The {extension} is successfully unloaded.')
-
+@slash.slash(name="logout", description="Disconnect bot from discord", default_permission=False, permissions=owner_perm,guild_ids=guild_ids)
+async def logout(ctx):
+    await ctx.send("Bye Bye logging out!")
+    await bot.close()
 
 @bot.command(hidden=True)
 @commands.is_owner()
@@ -130,9 +113,9 @@ if __name__ == "__main__":
     bot.config = Document(bot.db, "config")
     bot.give = Document(bot.db, "giveaway")
     bot.score = Document(bot.db, "score")
-
+    
     for file in os.listdir(cwd + "/cogs"):
-        if file.endswith(".py") and not file.startswith("_") and not file.startswith("slash") and not file.startswith("test"):
+        if file.endswith(".py") and not file.startswith("_") and not file.startswith("test"):
             bot.load_extension(f"cogs.{file[:-3]}")
-
+    
     bot.run(bot.config_token)
