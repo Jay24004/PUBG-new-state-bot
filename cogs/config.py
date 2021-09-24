@@ -3,6 +3,7 @@ from discord.ext import commands
 import datetime
 from discord_slash import cog_ext, SlashContext, cog_ext, SlashContext
 from discord_slash.utils.manage_commands import create_option, create_choice, create_permission
+from discord_slash.model import SlashCommandPermissionType
 guild_ids = [814374218602512395, 829615142450495601]
 
 owner_perm = {
