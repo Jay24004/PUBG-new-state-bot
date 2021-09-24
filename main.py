@@ -41,6 +41,7 @@ bot = commands.Bot(
     description="commands List of Me",
     command_prefix=">",
     case_insensitive=True,
+    help_command=None,
     owner_ids=[391913988461559809, 488614633670967307, 301657045248114690],
     intents=intents,
 )
@@ -62,6 +63,7 @@ bot.version = "0.5"
 bot.uptime = datetime.datetime.utcnow()
 
 guild_ids = [814374218602512395, 829615142450495601]
+
 owner_perm = {
     814374218602512395:[
     create_permission(567374379575672852, SlashCommandPermissionType.USER, True),

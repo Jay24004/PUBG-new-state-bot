@@ -8,7 +8,7 @@ from discord_slash import cog_ext, SlashContext, cog_ext, SlashContext
 from discord_slash.utils.manage_commands import create_option, create_choice, create_permission
 from discord_slash.model import SlashCommandPermissionType
 
-guild_ids=[829615142450495601, 814374218602512395]
+guild_ids=[829615142450495601, 814374218602512395,819267038614519869]
 
 
 staff_perm = {
@@ -27,6 +27,10 @@ staff_perm = {
 	create_permission(814405582177435658, SlashCommandPermissionType.ROLE, True),
 	create_permission(814405684581236774, SlashCommandPermissionType.ROLE, True),
 	create_permission(816595613230694460, SlashCommandPermissionType.ROLE, True),
+	],
+	819267038614519869:[
+	create_permission(819306312889925632, SlashCommandPermissionType.ROLE, True),
+	create_permission(819267811549118505, SlashCommandPermissionType.ROLE, True),
 	]
 
 }

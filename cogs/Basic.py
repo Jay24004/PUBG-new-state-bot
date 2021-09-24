@@ -17,7 +17,7 @@ from discord_slash import cog_ext, SlashContext, cog_ext, SlashContext
 from discord.ext import commands
 
 description = "Some Basic commands"
-guild_ids=[829615142450495601, 814374218602512395]
+guild_ids=[829615142450495601, 814374218602512395, 819267038614519869]
 
 class Basic(commands.Cog, description=description):
     def __init__(self, bot):

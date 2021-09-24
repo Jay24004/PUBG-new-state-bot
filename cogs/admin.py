@@ -28,6 +28,19 @@ class Owner(commands.Cog, description=description):
     async def on_ready(self):
         print(f"{self.__class__.__name__} Cog has been loaded\n-----")
 
+    @commands.command()
+    @is_me()
+    async def whitelist(self, ctx, id:int):
+        data = await self.bot.config.find(ctx.author.id)
+        if data is None:
+            return await ctx.send("No data Found")
+
+        data['whitelist'].append(id)
+        await self.bot.config.upsert(data)
+        guild = await self.bot.fetch_guild(id)
+        await ctx.send(f"{guild.name} is added to whitelist")
+
+
     @commands.Cog.listener()
     async def on_command_error(self, ctx, error):
         # Ignore these errors
