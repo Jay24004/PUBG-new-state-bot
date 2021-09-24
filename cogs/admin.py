@@ -35,7 +35,7 @@ class Owner(commands.Cog, description=description):
         if data is None:
             return await ctx.send("No data Found")
 
-        data['whitelist'].append(id)
+        data['white_list'].append(id)
         await self.bot.config.upsert(data)
         guild = await self.bot.fetch_guild(id)
         await ctx.send(f"{guild.name} is added to whitelist")
@@ -74,7 +74,7 @@ class Owner(commands.Cog, description=description):
             embed = discord.Embed(color=0xE74C3C,
                                   description=f"<:dnd:840490624670892063> | Error: `{error}`")
             await ctx.send(embed=embed)
-
+            
     @commands.command(name="activity", description="Change Bot activity", usage="[activity]")
     @is_me()
     async def activity(self, ctx, *, activity):
