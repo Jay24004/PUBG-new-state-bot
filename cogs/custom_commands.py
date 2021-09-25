@@ -8,7 +8,7 @@ from discord_slash import cog_ext, SlashContext, cog_ext, SlashContext
 from discord_slash.utils.manage_commands import create_option, create_choice, create_permission
 from discord_slash.model import SlashCommandPermissionType
 
-guild_ids=[829615142450495601, 814374218602512395,819267038614519869]
+guild_ids=[829615142450495601, 814374218602512395]
 
 
 staff_perm = {
@@ -56,9 +56,10 @@ class Misc(commands.Cog):
 		await ctx.channel.send(f"Please avoid going off topic, {user}. You can have unrelated conversations in <#{data['general']}> or <#{data['eng_chat']}>")
 		await ctx.send("done",hidden=True)
 
-	@cog_ext.cog_slash(name="say", description="simple say command",guild_ids=guild_ids, default_permission=False, permissions=staff_perm,
+	@cog_ext.cog_slash(name="say", description="simple say command",guild_ids=[829615142450495601, 814374218602512395,819267038614519869], default_permission=False, permissions=staff_perm,
 		options=[create_option(name="str", description="Type Thing that bot need to send", option_type=3, required=True)]
 		)
+	@commands.cooldown(3,60 , commands.BucketType.user)
 	async def say(self, ctx, str:str):
 		await ctx.channel.send(f"{str}")
 		await ctx.send("Said",hidden=True)
