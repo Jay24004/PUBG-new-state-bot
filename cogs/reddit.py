@@ -8,9 +8,6 @@ import re
 from discord_slash import cog_ext, SlashContext, cog_ext, SlashContext
 from discord_slash.utils.manage_commands import create_option, create_choice
 
-
-
-
 guild_ids=[829615142450495601]
 
 reddit_api = praw.Reddit(client_id="TTD47ulffpWTZqxcM0zV1w",

@@ -28,11 +28,10 @@ class Events(commands.Cog):
     async def before_change_status(self):
         await self.bot.wait_until_ready()
 
-
     @commands.Cog.listener()
     async def on_ready(self):
         print(f"{self.__class__.__name__} Cog has been loaded\n-----")
-
+    
     @commands.Cog.listener()
     async def on_guild_join(self, guild):
         data = await self.bot.config.find(488614633670967307)
@@ -46,7 +45,7 @@ class Events(commands.Cog):
             await guild.leave()
             owner = await self.bot.fetch_user(488614633670967307)
             await owner.send(f"I was Added to Name: {guild.name} | ID: {guild.id}\n As it's not WhiteListed i left")
-
+            
     @commands.Cog.listener()
     async def on_slash_command_error(self, ctx, ex):
         if isinstance(ex, commands.MissingPermissions):

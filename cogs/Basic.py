@@ -17,7 +17,7 @@ from discord_slash import cog_ext, SlashContext, cog_ext, SlashContext
 from discord.ext import commands
 
 description = "Some Basic commands"
-guild_ids=[829615142450495601, 814374218602512395, 819267038614519869]
+guild_ids=[829615142450495601, 814374218602512395, 819267038614519869,777033462086762516]
 
 class Basic(commands.Cog, description=description):
     def __init__(self, bot):
@@ -32,12 +32,9 @@ class Basic(commands.Cog, description=description):
     async def on_ready(self):
         print(f"{self.__class__.__name__} Cog has been loaded\n-----")
 
-    @commands.command()
-    @is_me()
+    @cog_ext.cog_slash(name="ping", description="show bots latency",guild_ids=guild_ids)
     async def ping(self, ctx):
-        await ctx.message.delete()
         start_time = time.time()
-        message = await ctx.send("Testing Ping...")
         end_time = time.time()
 
         start = self.bot.uptime
@@ -52,9 +49,9 @@ class Basic(commands.Cog, description=description):
         dping = dping.total_seconds()
 
         embed = discord.Embed(title="Pings!", color=ctx.author.colour,
-                              description=f"**Response TIme** {round(self.bot.latency * 1000)}ms\n**API**: {round((end_time - start_time) * 1000)}ms\n**Database Ping**: {round(dping * 1000)}Ms\n**My Age**: {format_timespan(total_s)}")
+                              description=f"**Response TIme** {round(self.bot.latency * 1000)}ms\n**Database Ping**: {round(dping * 1000)}Ms\n**My Age**: {format_timespan(total_s)}")
 
-        await message.edit(content=None, embed=embed)
+        await ctx.send(content=None, embed=embed)
 
     @cog_ext.cog_slash(
         name="stats", description="A useful command that displays bot statistics.",guild_ids=guild_ids

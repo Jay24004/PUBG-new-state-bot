@@ -30,17 +30,16 @@ class Owner(commands.Cog, description=description):
 
     @commands.command()
     @is_me()
-    async def whitelist(self, ctx, id:int):
+    async def whitelist(self, ctx, guild:int):
         data = await self.bot.config.find(ctx.author.id)
         if data is None:
             return await ctx.send("No data Found")
 
-        data['white_list'].append(id)
+        data['white_list'].append(guild)
         await self.bot.config.upsert(data)
-        guild = await self.bot.fetch_guild(id)
-        await ctx.send(f"{guild.name} is added to whitelist")
+        await ctx.send(f"{guild} is added to whitelist")
 
-
+    
     @commands.Cog.listener()
     async def on_command_error(self, ctx, error):
         # Ignore these errors
@@ -74,7 +73,7 @@ class Owner(commands.Cog, description=description):
             embed = discord.Embed(color=0xE74C3C,
                                   description=f"<:dnd:840490624670892063> | Error: `{error}`")
             await ctx.send(embed=embed)
-            
+           
     @commands.command(name="activity", description="Change Bot activity", usage="[activity]")
     @is_me()
     async def activity(self, ctx, *, activity):
