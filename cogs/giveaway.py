@@ -16,14 +16,22 @@ from amari import AmariClient
 time_regex = re.compile("(?:(\d{1,5})(h|s|m|d))+?")
 
 time_dict = {"h": 3600, "s": 1, "m": 60, "d": 86400}
-guild_ids=[829615142450495601]
+guild_ids=[829615142450495601, 885802388001288262]
 
 admin_perms = {
-	829615142450495601: [
+	829615142450495601: [	#BD
 	create_permission(567374379575672852, SlashCommandPermissionType.USER, True),
 	create_permission(488614633670967307, SlashCommandPermissionType.USER, True),
 	create_permission(829615142450495609, SlashCommandPermissionType.ROLE, True),
 	create_permission(829615142450495608, SlashCommandPermissionType.ROLE, True)
+	],
+	885802388001288262:[	#FRANCE
+	create_permission(885814181549457418, SlashCommandPermissionType.ROLE, True),
+	create_permission(885815298110918666, SlashCommandPermissionType.ROLE, True),
+	create_permission(888409306616168560, SlashCommandPermissionType.ROLE, True),
+	create_permission(890486198471098368, SlashCommandPermissionType.ROLE, True),
+	create_permission(885814690138189824, SlashCommandPermissionType.ROLE, True),
+	create_permission(488614633670967307, SlashCommandPermissionType.USER, True)
 	]
 }
 
