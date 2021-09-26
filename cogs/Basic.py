@@ -8,7 +8,7 @@ import platform
 import random
 import datetime
 import traceback
-import datetime
+
 from humanfriendly import format_timespan
 import utils.json_loader
 from discord_slash import cog_ext, SlashContext, cog_ext, SlashContext
@@ -28,6 +28,14 @@ class Basic(commands.Cog, description=description):
             return ctx.message.author.id in [488614633670967307, 573896617082748951,573896617082748951]
         return commands.check(predicate)
 
+    @commands.command()
+    async def apply(self, ctx, invite: discord.Invite):
+        channel = self.bot.get_channel(891669710163288094)
+        embed = discord.Embed(title="Apply Request", description="Whitelist Request from: `{ctx.author.name}`\nServer Invite: `{invite}`" )
+        embed.set_footer(text=ctx.author.name, icon_url=ctx.author.avatar_url)
+        embed.timestamp = datetime.datetime.utcnow()
+        await channel.send(embed=embed)
+        
     @commands.Cog.listener()
     async def on_ready(self):
         print(f"{self.__class__.__name__} Cog has been loaded\n-----")

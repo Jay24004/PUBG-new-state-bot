@@ -1,6 +1,6 @@
 import datetime
 import discord
-
+import random
 from copy import deepcopy
 from humanfriendly import format_timespan
 from dateutil.relativedelta import relativedelta
@@ -36,6 +36,8 @@ class Events(commands.Cog):
     async def on_guild_join(self, guild):
         data = await self.bot.config.find(488614633670967307)
         if guild.id in data['white_list']:
+            data = {"_id": guild.id, "general": None,"eng_chat": None,"faq": None,"new": None,"lang": None, "g_bypass":[], "g_blacklist": []}
+            await self.bot.config.upsert(data)
             return
         else:
             try:
