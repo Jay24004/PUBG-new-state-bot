@@ -31,11 +31,12 @@ class Basic(commands.Cog, description=description):
     @commands.command()
     async def apply(self, ctx, invite: discord.Invite):
         channel = self.bot.get_channel(891669710163288094)
-        embed = discord.Embed(title="Apply Request", description="Whitelist Request from: `{ctx.author.name}`\nServer Invite: `{invite}`" )
+        embed = discord.Embed(title="Apply Request", description=f"Whitelist Request from: `{ctx.author.name}`\nServer Invite: `{invite}`" )
         embed.set_footer(text=ctx.author.name, icon_url=ctx.author.avatar_url)
         embed.timestamp = datetime.datetime.utcnow()
         await channel.send(embed=embed)
-        
+        await ctx.send("Your Request has been Sent")
+
     @commands.Cog.listener()
     async def on_ready(self):
         print(f"{self.__class__.__name__} Cog has been loaded\n-----")
