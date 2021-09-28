@@ -153,10 +153,10 @@ class Misc(commands.Cog):
 		await ctx.channel.send(f"Please do not use any other language aside from English in this channel. {user}")
 		await ctx.send("done",hidden=True)
 
-	@cog_ext.cog_slash(name="official", guild_ids=[814374218602512395], description="When someone ask if server is official",default_permission=False, permissions=staff_perm,
+	@cog_ext.cog_slash(name="official", guild_ids=[814374218602512395], description="When someone ask if server is official",default_permission=False, permissions=staff_perm2,
 		options=[create_option(name="user", description="Select users to reply", option_type=3,required=True),])
 	async def official(self, ctx, user: str):
-		await ctx.channel.send(f"{user} ,This is the oldest and Biggest community of **PUBG : NEW STATE INDIA**.\n\nThere is no official server for **PUBG : NEW STATE**.")
+		await ctx.channel.send(f"{user} ,This is the Oldest and Biggest community of **PUBG : NEW STATE INDIA**.\n\nThere is no official server for **PUBG : NEW STATE**.")
 		await ctx.send("done",hidden=True)
 
 	@cog_ext.cog_slash(name="news", guild_ids=guild_ids, description="When someone ask for New State News",default_permission=False, permissions=staff_perm,
