@@ -17,7 +17,6 @@ from discord_slash import cog_ext, SlashContext, cog_ext, SlashContext
 from discord.ext import commands
 
 description = "Some Basic commands"
-guild_ids=[829615142450495601, 814374218602512395, 819267038614519869,777033462086762516]
 
 class Basic(commands.Cog, description=description):
     def __init__(self, bot):
@@ -29,6 +28,7 @@ class Basic(commands.Cog, description=description):
         return commands.check(predicate)
 
     @commands.command()
+    @commands.dm_only()
     async def apply(self, ctx, invite: discord.Invite):
         channel = self.bot.get_channel(891669710163288094)
         embed = discord.Embed(title="Apply Request", description=f"Whitelist Request from: `{ctx.author.name}`\nServer Invite: `{invite}`" )
@@ -41,7 +41,7 @@ class Basic(commands.Cog, description=description):
     async def on_ready(self):
         print(f"{self.__class__.__name__} Cog has been loaded\n-----")
 
-    @cog_ext.cog_slash(name="ping", description="show bots latency",guild_ids=guild_ids)
+    @cog_ext.cog_slash(name="ping", description="show bots latency",guild_ids=None)
     async def ping(self, ctx):
         start_time = time.time()
         end_time = time.time()
@@ -63,7 +63,7 @@ class Basic(commands.Cog, description=description):
         await ctx.send(content=None, embed=embed)
 
     @cog_ext.cog_slash(
-        name="stats", description="A useful command that displays bot statistics.",guild_ids=guild_ids
+        name="stats", description="A useful command that displays bot statistics.",guild_ids=None
     )
     async def stats(self, ctx):
         pythonVersion = platform.python_version()

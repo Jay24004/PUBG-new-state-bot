@@ -47,6 +47,41 @@ staff_perm = {
 
 }
 
+staff_perm2 = {
+	829615142450495601:[ #bd 
+	create_permission(567374379575672852, SlashCommandPermissionType.USER, True),
+	create_permission(488614633670967307, SlashCommandPermissionType.USER, True),
+	create_permission(573896617082748951, SlashCommandPermissionType.USER, True),
+	create_permission(829615142450495608, SlashCommandPermissionType.ROLE, True),
+	create_permission(829615142450495607, SlashCommandPermissionType.ROLE, True),
+	create_permission(829615142450495603, SlashCommandPermissionType.ROLE, True),
+	],
+	814374218602512395:[ #india
+	create_permission(567374379575672852, SlashCommandPermissionType.USER, True),
+	create_permission(488614633670967307, SlashCommandPermissionType.USER, True),
+	create_permission(573896617082748951, SlashCommandPermissionType.USER, True),
+	create_permission(814405582177435658, SlashCommandPermissionType.ROLE, True),
+	create_permission(814405684581236774, SlashCommandPermissionType.ROLE, True),
+	],
+	777033462086762516:[ #nepal
+	create_permission(777033462086762519, SlashCommandPermissionType.ROLE, True),
+	create_permission(777033462086762520, SlashCommandPermissionType.ROLE, True),
+	],
+	819267038614519869:[	#egypt
+	create_permission(819306312889925632, SlashCommandPermissionType.ROLE, True),
+	create_permission(819267811549118505, SlashCommandPermissionType.ROLE, True),
+	],
+	885802388001288262:[	#FRANCE
+	create_permission(885814181549457418, SlashCommandPermissionType.ROLE, True),
+	create_permission(885815298110918666, SlashCommandPermissionType.ROLE, True),
+	create_permission(888409306616168560, SlashCommandPermissionType.ROLE, True),
+	create_permission(890486198471098368, SlashCommandPermissionType.ROLE, True),
+	create_permission(885814690138189824, SlashCommandPermissionType.ROLE, True),
+	create_permission(488614633670967307, SlashCommandPermissionType.USER, True)
+	]
+
+}
+
 class Misc(commands.Cog):
 	def __init__(self , bot):
 		self.bot = bot
@@ -116,6 +151,12 @@ class Misc(commands.Cog):
 		if data is None:
 			return await ctx.send("Setup is not done yet or Error has happaned")
 		await ctx.channel.send(f"Please do not use any other language aside from English in this channel. {user}")
+		await ctx.send("done",hidden=True)
+
+	@cog_ext.cog_slash(name="official", guild_ids=[814374218602512395], description="When someone ask if server is official",default_permission=False, permissions=staff_perm,
+		options=[create_option(name="user", description="Select users to reply", option_type=3,required=True),])
+	async def official(self, ctx, user: str):
+		await ctx.channel.send(f"{user} ,This is the oldest and Biggest community of **PUBG : NEW STATE INDIA**.\n\nThere is no official server for **PUBG : NEW STATE**.")
 		await ctx.send("done",hidden=True)
 
 	@cog_ext.cog_slash(name="news", guild_ids=guild_ids, description="When someone ask for New State News",default_permission=False, permissions=staff_perm,
