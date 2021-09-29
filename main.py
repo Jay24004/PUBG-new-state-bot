@@ -115,6 +115,7 @@ if __name__ == "__main__":
     bot.config = Document(bot.db, "config")
     bot.give = Document(bot.db, "giveaway")
     bot.score = Document(bot.db, "score")
+    bot.perms = Document(bot.db, "permissions")
     
     for file in os.listdir(cwd + "/cogs"):
         if file.endswith(".py") and not file.startswith("_") and not file.startswith("test"):

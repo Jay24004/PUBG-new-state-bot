@@ -429,9 +429,9 @@ class giveaway(commands.Cog):
 	@cog_ext.cog_slash(name="greroll", description="Reroll the giveaway for new winners",guild_ids=guild_ids,default_permission=False,
 		permissions=admin_perms,
 		options=[
+			create_option(name="channel", description="channel of giveaway message", required=True, option_type=7),
 			create_option(name="message_id", description="message id of the giveaway", required=True, option_type=3),
 			create_option(name="winners", description="numbers of winners", required=True, option_type=4),
-			create_option(name="channel", description="channel of giveaway message", required=False, option_type=7),
 			]
 		)
 	async def greroll(self, ctx, message_id, winners: int, channel=None,):
@@ -514,7 +514,7 @@ class giveaway(commands.Cog):
 		else:	
 			data['g_blacklist'].append(role.id)
 		await self.bot.config.upsert(data)
-		await ctx.send(f"{role.mention} Has added to Blacklist", hidden=True)
+		await ctx.send(f"{role.mention} Has been Blacklisted", hidden=True)
 
 	@cog_ext.cog_slash(name="setbypass", description="make and role to bpyass all global giveaway",guild_ids=guild_ids,default_permission=False,
 		permissions=admin_perms,
@@ -529,8 +529,10 @@ class giveaway(commands.Cog):
 			data['g_bypass'].remove(role.id)
 			await ctx.send(f"{role.mention} Has been Removed from the Bypass list", hidden=True)
 			return await self.bot.config.upsert(data)
-		await self.bot.config.upsert(data)
-		await ctx.send(f"{role.mention} is added to bypass list", hidden=True)
+		if not role.id in data['g_bypass']:
+			data['g_bypass'].append(role.id)
+			await self.bot.config.upsert(data)
+			await ctx.send(f"{role.mention} is added to bypass list", hidden=True)
 
 	@cog_ext.cog_slash(name="bypasslist", description="Send the Bypass role list", guild_ids=guild_ids, default_permission=False, permissions=admin_perms)
 	async def bypasslist(self, ctx):

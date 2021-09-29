@@ -36,6 +36,16 @@ class Config(commands.Cog):
 	def __init__(self, bot):
 		self.bot = bot
 
+	def is_server_staff():
+		async def predicate(ctx):
+			if ctx.author == ctx.guild.owner: return True
+			data = await ctx.bot.config.find(ctx.guild.id)
+			if data:
+				for roles in data['staff_role']:
+					role = discord.utils.get(ctx.guild.roles, id=roles)
+					return role in ctx.author.roles
+		return commands.check(predicate)
+
 
 	@commands.Cog.listener()
 	async def on_ready(self):
@@ -73,6 +83,40 @@ class Config(commands.Cog):
 		else:
 			await ctx.send("You need `administrator` permissions to use this command")
 
+	@cog_ext.cog_slash(name="whois", description="show usefull info about user", options=[
+		create_option(name="user", description="select user", required=False, option_type=6)])
+	@is_server_staff()
+	async def whois(self, ctx , user: discord.Member=None):
+		def fomat_time(time):
+			return time.strftime('%d-%B-%Y %I:%m %p')
+
+		member = user if user else ctx.author
+		usercolor = member.color
+
+		today = (datetime.datetime.utcnow() -
+		member.created_at).total_seconds()
+
+		embed = discord.Embed(title=f'{member.name}', color=usercolor)
+		embed.set_thumbnail(url=member.avatar_url)
+		embed.add_field(name='Account Name:',
+			value=f'{member.name}', inline=False)
+		embed.add_field(
+			name='Created at:', value=f"{fomat_time(member.created_at)}\n{format_timespan(today)}")
+		embed.add_field(name='Joined at', value=fomat_time(member.joined_at))
+		embed.add_field(name='Account Status',
+			value=str(member.status).title())
+		embed.add_field(name='Account Activity',
+			value=f"{str(member.activity.type).title().split('.')[1]} {member.activity.name}" if member.activity is not None else "None")
+
+		hsorted_roles = sorted(
+		[role for role in member.roles[-2:]], key=lambda x: x.position, reverse=True)
+
+		embed.add_field(name='Top Role:', value=', '.join(
+			role.mention for role in hsorted_roles), inline=False)
+		embed.add_field(name='Number of Roles',
+			value=f"{len(member.roles) -1 }")
+		embed.set_footer(text=f'ID {member.id}', icon_url=member.avatar_url)
+		await ctx.send(embed=embed)
 
 def setup(bot):
 	bot.add_cog(Config(bot))
