@@ -70,9 +70,10 @@ class Owner(commands.Cog, description=description):
             return
         else:
             #raise error
-            embed = discord.Embed(color=0xE74C3C,
+            embed = discord.Embed(color=0x2f3136,
                                   description=f"<:dnd:840490624670892063> | Error: `{error}`")
-            await ctx.send(embed=embed)
+            channel = self.bot.get_channel(893057761607315496)
+            await channel.send(embed=embed)
         
     @commands.command(name="activity", description="Change Bot activity", usage="[activity]")
     @is_me()
