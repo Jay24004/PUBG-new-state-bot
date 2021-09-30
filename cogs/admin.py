@@ -39,7 +39,7 @@ class Owner(commands.Cog, description=description):
         await self.bot.config.upsert(data)
         await ctx.send(f"{guild} is added to whitelist")
 
-    """
+    
     @commands.Cog.listener()
     async def on_command_error(self, ctx, error):
         # Ignore these errors
@@ -73,7 +73,7 @@ class Owner(commands.Cog, description=description):
             embed = discord.Embed(color=0xE74C3C,
                                   description=f"<:dnd:840490624670892063> | Error: `{error}`")
             await ctx.send(embed=embed)
-    """    
+        
     @commands.command(name="activity", description="Change Bot activity", usage="[activity]")
     @is_me()
     async def activity(self, ctx, *, activity):
