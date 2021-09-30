@@ -17,18 +17,22 @@ class profanity(commands.Cog):
 
 	@commands.Cog.listener()
 	async def on_message(self, message):
+		if message.author.bot: return
 		if message.guild.id == 814374218602512395:
-			if message.author.guild_permissions.manage_messages: return
 			channel = self.bot.get_channel(893049235241574430)
 			messageContent = message.content.lower()
+			messageContent = messageContent.split(" ")
 			if len(messageContent) > 0:
-				for word in bad_word:
-					if word in messageContent:
+				for word in messageContent:
+					if word in bad_word:
 						embed = discord.Embed(title=message.author.name, description=f"**Message**: {message.content}\n**Channel**: {message.channel.mention}\n**Banned**: {word}",color=0x2f3136)
 						embed.timestamp = datetime.datetime.now()
 						embed.set_footer(text=f"ID: {message.id}",icon_url=message.author.avatar_url)
 						embed.set_thumbnail(url=message.author.avatar_url)
-						await channel.send(embed=embed)
+						return await channel.send(embed=embed)
+
+				print(f"Nothing Found: {messageContent}")
+
 
 def setup(bot):
 	bot.add_cog(profanity(bot))
