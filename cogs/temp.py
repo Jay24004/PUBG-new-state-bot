@@ -31,8 +31,6 @@ class profanity(commands.Cog):
 						embed.set_thumbnail(url=message.author.avatar_url)
 						return await channel.send(embed=embed)
 
-				print(f"Nothing Found: {messageContent}")
-
 
 def setup(bot):
 	bot.add_cog(profanity(bot))
