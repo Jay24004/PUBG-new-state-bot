@@ -103,13 +103,24 @@ class Misc(commands.Cog):
 		await ctx.channel.send(f"Please avoid going off topic, {user}. You can have unrelated conversations in <#{data['general']}> or <#{data['eng_chat']}>")
 		await ctx.send("done",hidden=True)
 
-	@cog_ext.cog_slash(name="say", description="simple say command",guild_ids=guild_ids, default_permission=False, permissions=staff_perm2,
-		options=[create_option(name="str", description="Type Thing that bot need to send", option_type=3, required=True)]
+	@cog_ext.cog_slash(name="say", description="simple say command",guild_ids=guild_ids, default_permission=False, permissions=staff_perm,
+		options=[create_option(name="str", description="Type Thing that bot need to send", option_type=3, required=True),
+		create_option(name="reply", description="Enter Message id you want to reply", option_type=3, required=False),
+		create_option(name="ping", description="you want to ping the user ?", option_type=5, required=False)]
 		)
 	@commands.cooldown(3,60 , commands.BucketType.user)
-	async def say(self, ctx, str:str):
-		await ctx.channel.send(f"{str}")
-		await ctx.send("Said",hidden=True)
+	async def say(self, ctx, str:str, reply: int=None, ping: bool=True):
+		if reply:
+			try:
+				message = await ctx.channel.fetch_message(reply)
+			except:
+				return await ctx.send("make Sure your in the same chanenl as message or check your message id")
+
+			await message.reply(f"{str}", mention_author=ping)
+			await ctx.send(f"You Said: {str}\nTo {message.author.name}", hidden=True)
+		if not reply:
+			await ctx.channel.send(f"{str}",allowed_mentions=discord.AllowedMentions(users=True, everyone=False, roles=False, replied_user=False))
+			await ctx.send(f"You Said: {str} in {ctx.channel.mention}", hidden=True)
 
 	@cog_ext.cog_slash(name="pin", guild_ids=guild_ids, description="refer someone to channel pin message",default_permission=False, permissions=staff_perm,
 		options=[create_option(name="user", description="Select users to reply", option_type=3,required=True),
