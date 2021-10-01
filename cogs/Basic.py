@@ -101,7 +101,7 @@ class Basic(commands.Cog, description=description):
         name="update", description="A commands for bot updates", guild_ids=None
         )
     async def update(self, ctx):
-        embed = discord.Embed(color=0x2f3136, description="1.An have added the `/help` command currently very simple - <t:1632907725:R>\n2.The /say command has been improved now, you can't ping `@everyone or any other roles` <t:1632981213:R>")
+        embed = discord.Embed(color=0x2f3136, description="1.An have added the `/help` command currently very simple - <t:1632907725:R>\n\n2.The /say command has been improved now, you can't ping `@everyone or any other roles` <t:1632981213:R>\n\n3. New Mini-Games and Error Handler")
         await ctx.send(embed=embed)
     
     @cog_ext.cog_slash(name="help", description="help command for your help", guild_ids=None)

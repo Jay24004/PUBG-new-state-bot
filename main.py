@@ -59,7 +59,7 @@ bot.guild_id = [797920317871357972]
 bot.cwd = cwd
 bot.perm = {}
 bot.giveaway = {}
-bot.version = "0.5"
+bot.version = "1.0"
 bot.uptime = datetime.datetime.utcnow()
 
 guild_ids = [814374218602512395, 829615142450495601]
