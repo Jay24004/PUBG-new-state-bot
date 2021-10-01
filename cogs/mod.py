@@ -78,10 +78,10 @@ class Config(commands.Cog):
 			if language:
 				data['lang'] = language
 			if bot_channel:
-				if channel.id in data['bot_channel']:
-					data['bot_channel'].remove(channel.id)
-				if not channel.id in data['bot_channel']:
-					data['bot_channel'].append(channel.id)
+				if bot_channel.id in data['bot_channel']:
+					data['bot_channel'].remove(bot_channel.id)
+				if not bot_channel.id in data['bot_channel']:
+					data['bot_channel'].append(bot_channel.id)
 
 			await self.bot.config.upsert(data)
 
