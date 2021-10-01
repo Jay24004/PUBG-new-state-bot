@@ -166,7 +166,7 @@ class TicTacToe(commands.Cog):
     @cog_ext.cog_slash(
         name="TicTacToe",
         description="Start a game of tic tac toe",
-        guild_ids=guild_ids,
+        guild_ids=None,
     )
     @is_bot_channel()
     @commands.cooldown(3,60 , commands.BucketType.user)

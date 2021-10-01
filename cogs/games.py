@@ -27,7 +27,7 @@ class games(commands.Cog):
 		print(f"{self.__class__.__name__} Cog has been loaded\n-----")
 
 
-	@cog_ext.cog_slash(name="cointoss", description="Coin-toss game",guild_ids=guild_ids)
+	@cog_ext.cog_slash(name="cointoss", description="Coin-toss game",guild_ids=None)
 	@is_bot_channel()
 	@commands.cooldown(3,60 , commands.BucketType.user)
 	async def cointoss(self, ctx):
@@ -74,7 +74,7 @@ class games(commands.Cog):
 			except asyncio.TimeoutError:
 				await msg.edit(components=[])
 
-	@cog_ext.cog_slash(name="RPS", description="Play Rock-Paper-Scissors",guild_ids=guild_ids)
+	@cog_ext.cog_slash(name="RPS", description="Play Rock-Paper-Scissors",guild_ids=None)
 	@is_bot_channel()
 	@commands.cooldown(3,60 , commands.BucketType.user)
 	async def rps(self, ctx):
@@ -186,7 +186,7 @@ class games(commands.Cog):
 				await msg.edit(components=[])
 	"""
 	@cog_ext.cog_slash(name="Scores", description="Check Your Score",
-		guild_ids=guild_ids, options=[
+		guild_ids=None, options=[
 				create_option(name="game", description="Select game",required=True, option_type=3,choices=[
 					create_choice(name="Cointoss",value='coin'),
 					create_choice(name="RPS", value="rps"),

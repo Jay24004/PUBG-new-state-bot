@@ -114,7 +114,7 @@ class Misc(commands.Cog):
 			try:
 				message = await ctx.channel.fetch_message(reply)
 			except:
-				return await ctx.send("make Sure your in the same chanenl as message or check your message id")
+				return await ctx.send("make Sure your in the same chanenl as message or check your message id",hidden=True)
 
 			await message.reply(f"{str}", mention_author=ping)
 			await ctx.send(f"You Said: {str}\nTo {message.author.name}", hidden=True)
