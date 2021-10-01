@@ -14,8 +14,6 @@ from discord_slash.utils import manage_commands, manage_components
 from discord_slash.model import ButtonStyle
 
 
-guild_ids = [829615142450495601]
-
 
 class GameState(enum.IntEnum):
     empty = 0
@@ -153,6 +151,14 @@ class TicTacToe(commands.Cog):
     def __init__(self, bot):
         self.bot: commands.Bot = bot
 
+    def is_bot_channel():
+        async def predicate(ctx):
+            data = await ctx.bot.config.find(ctx.guild.id)
+            if data is None: return await ctx.send("This is not a bot-channel or there is no bot channel in server", hidden=True)
+            if data:
+                return ctx.channel.id == data['bot_channel'] or ctx.channel.id in data['bot-channel']
+        return commands.check(predicate)
+
     @commands.Cog.listener()
     async def on_ready(self):
         print(f"{self.__class__.__name__} Cog has been loaded\n-----")
@@ -162,6 +168,7 @@ class TicTacToe(commands.Cog):
         description="Start a game of tic tac toe",
         guild_ids=guild_ids,
     )
+    @is_bot_channel()
     @commands.cooldown(3,60 , commands.BucketType.user)
     async def ttt_start(self, ctx: SlashContext):
         await ctx.send(
@@ -214,25 +221,10 @@ class TicTacToe(commands.Cog):
 
         if determine_win_state(_board, GameState.player):
             winner = ctx.author.mention
-            data = await self.bot.score.find(ctx.author.id)
-            if data is None:
-                data = {'_id': ctx.author.id,'rps': {'win': 0, 'lost': 0},'tic_tac':  {'win': 0, 'lost': 0, 'tie': 0},'cointoss':  {'win': 0, 'lost': 0}}
-            data['tic_tac']['win'] += 1
-            await self.bot.score.upsert(data)
         elif determine_win_state(_board, GameState.ai):
             winner = self.bot.user.mention
-            data = await self.bot.score.find(ctx.author.id)
-            if data is None:
-                data = {'_id': ctx.author.id,'rps': {'win': 0, 'lost': 0},'tic_tac':  {'win': 0, 'lost': 0, 'tie': 0},'cointoss':  {'win': 0, 'lost': 0}}
-            data['tic_tac']['lost'] += 1
-            await self.bot.score.upsert(data)
         elif len(determine_possible_positions(_board)) == 0:
             winner = "Nobody"
-            data = await self.bot.score.find(ctx.author.id)
-            if data is None:
-                data = {'_id': ctx.author.id,'rps': {'win': 0, 'lost': 0},'tic_tac':  {'win': 0, 'lost': 0, 'tie': 0},'cointoss':  {'win': 0, 'lost': 0}}
-            data['tic_tac']['tie'] += 1
-            await self.bot.score.upsert(data)
         else:
             winner = None
 
