@@ -55,13 +55,13 @@ class Events(commands.Cog):
            
     @commands.Cog.listener()
     async def on_slash_command_error(self, ctx, ex):
-        if isinstance(ex, commands.MissingPermissions):
+        if isinstance(ex, commands.errors.MissingPermissions):
             await ctx.send("Hey! You lack permission to use this command.")
-        elif isinstance(ex, commands.CheckFailure):
+        elif isinstance(ex, commands.errors.CheckFailure):
             await ctx.send("You don't have permission to use this command or you can't it here", hidden=True)
-        elif isinstance(ex, commands.MissingAnyRole):
+        elif isinstance(ex, commands.errors.MissingAnyRole):
            await ctx.send("Hey! You lack permission to use this command.")
-        elif isinstance(ex, commands.CommandOnCooldown):
+        elif isinstance(ex, commands.errors.CommandOnCooldown):
             # If the command is currently on cooldown trip this
             m, s = divmod(ex.retry_after, 60)
             h, m = divmod(m, 60)
