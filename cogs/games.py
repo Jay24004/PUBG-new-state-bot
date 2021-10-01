@@ -19,7 +19,9 @@ class games(commands.Cog):
 			data = await ctx.bot.config.find(ctx.guild.id)
 			if data is None: return await ctx.send("This is not a bot-channel or there is no bot channel in server", hidden=True)
 			if data:
-				return ctx.channel.id == data['bot_channel'] or ctx.channel.id in data['bot-channel']
+				return ctx.channel.id == data['bot_channel'] or ctx.channel.id in data['bot_channel']
+			else:
+				await ctx.send("This is not a bot-channel or there is no bot channel in server", hidden=True)
 		return commands.check(predicate)
 
 	@commands.Cog.listener()
@@ -28,9 +30,10 @@ class games(commands.Cog):
 
 
 	@cog_ext.cog_slash(name="cointoss", description="Coin-toss game",guild_ids=None)
-	@is_bot_channel()
 	@commands.cooldown(3,60 , commands.BucketType.user)
 	async def cointoss(self, ctx):
+		config = await self.bot.config.find(ctx.guild.id)
+		if config is None or ctx.channel.id not in config['bot_channel']: return await ctx.send("You can't use this here use /config", hidden=True)
 		main_embed = discord.Embed(title=f"{ctx.author.name}'s cointoss",description="Select your Side Head or Tail, You have 30s to select one", color=0x2f3136)
 		main_embed.set_footer(text=ctx.guild.name, icon_url=ctx.guild.icon_url)
 		main_embed.timestamp = datetime.datetime.now()
@@ -75,10 +78,10 @@ class games(commands.Cog):
 				await msg.edit(components=[])
 
 	@cog_ext.cog_slash(name="RPS", description="Play Rock-Paper-Scissors",guild_ids=None)
-	@is_bot_channel()
 	@commands.cooldown(3,60 , commands.BucketType.user)
 	async def rps(self, ctx):
-
+		config = await self.bot.config.find(ctx.guild.id)
+		if config is None or ctx.channel.id not in config['bot_channel']: return await ctx.send("You can't use this here use /config", hidden=True)
 		main_embed = discord.Embed(title=f"{ctx.author.name}'s RPS", description="Select your tool from below buttons, you have 30s to select",colour=0x2f3136)
 		main_embed.set_footer(text=ctx.guild.name, icon_url=ctx.guild.icon_url)
 		main_embed.timestamp = datetime.datetime.now()

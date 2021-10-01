@@ -155,8 +155,7 @@ class TicTacToe(commands.Cog):
         async def predicate(ctx):
             data = await ctx.bot.config.find(ctx.guild.id)
             if data is None: return await ctx.send("This is not a bot-channel or there is no bot channel in server", hidden=True)
-            if data:
-                return ctx.channel.id == data['bot_channel'] or ctx.channel.id in data['bot-channel']
+            return ctx.channel.id in data['bot_channel']
         return commands.check(predicate)
 
     @commands.Cog.listener()

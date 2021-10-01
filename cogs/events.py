@@ -52,11 +52,13 @@ class Events(commands.Cog):
             await guild.leave()
             owner = await self.bot.fetch_user(488614633670967307)
             await owner.send(f"I was Added to Name: {guild.name} | ID: {guild.id}\n As it's not WhiteListed i left")
-            
+           
     @commands.Cog.listener()
     async def on_slash_command_error(self, ctx, ex):
         if isinstance(ex, commands.MissingPermissions):
             await ctx.send("Hey! You lack permission to use this command.")
+        elif isinstance(ex, commands.CheckFailure):
+            await ctx.send("You don't have permission to use this command or you can't it here", hidden=True)
         elif isinstance(ex, commands.MissingAnyRole):
            await ctx.send("Hey! You lack permission to use this command.")
         elif isinstance(ex, commands.CommandOnCooldown):
