@@ -57,9 +57,10 @@ class Config(commands.Cog):
 		create_option(name="faq", description="select faq channel for your server",required=False, option_type=7),
 		create_option(name="news", description="select news channel for your server",required=False, option_type=7),
 		create_option(name="language", description="change language for /lang command",required=False, option_type=3)
+		create_option(name="bot-channel", description="set channel for bot command", required=True, option_type=7)
 		]
 	)
-	async def config(self, ctx, general: discord.TextChannel=None, eng_chat:discord.TextChannel=None, faq: discord.TextChannel=None, news:discord.TextChannel=None, language: str=None):
+	async def config(self, ctx, general: discord.TextChannel=None, eng_chat:discord.TextChannel=None, faq: discord.TextChannel=None, news:discord.TextChannel=None, language: str=None, bot-channel: discord.TextChannel =None):
 		if ctx.author.guild_permissions.administrator or ctx.author.id == 488614633670967307:
 			
 			data = await self.bot.config.find(ctx.guild.id)
@@ -76,6 +77,11 @@ class Config(commands.Cog):
 				data['new'] = news.id
 			if language:
 				data['lang'] = language
+			if bot-channel:
+				if channel.id in data['bot_channel']:
+					data['bot_channel'].remove(channel.id)
+				if not channel.id data['bot_channel']:
+					data['bot_channel'].append(channel.id)
 
 			await self.bot.config.upsert(data)
 
