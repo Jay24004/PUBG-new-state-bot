@@ -74,7 +74,7 @@ class Owner(commands.Cog, description=description):
                                   description=f"<:dnd:840490624670892063> | Error: `{error}`")
             channel = self.bot.get_channel(893057761607315496)
             await channel.send(embed=embed)
-    
+      
     @commands.command(name="activity", description="Change Bot activity", usage="[activity]")
     @is_me()
     async def activity(self, ctx, *, activity):

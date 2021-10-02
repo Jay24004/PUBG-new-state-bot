@@ -173,6 +173,7 @@ class giveaway(commands.Cog):
 
 	@commands.Cog.listener()
 	async def on_component(self, ctx: ComponentContext):
+		await ctx.defer(hidden=True)
 		if ctx.custom_id == "Giveaway:Enter":
 			#await ctx.defer(hidden=True)
 			data = await self.bot.give.find(ctx.origin_message.id)
@@ -278,8 +279,9 @@ class giveaway(commands.Cog):
 				emojig = self.bot.get_guild(888085276801531967)
 				emoji = await emojig.fetch_emoji(893744091710509097)
 				emoji2 = await emojig.fetch_emoji(893787497920876544)
+				exit = await emojig.fetch_emoji(893900833463349278)
 
-				buttons = [create_button(style=ButtonStyle.green, label="Enter", emoji=emoji2, disabled=False, custom_id="Giveaway:Enter"), create_button(style=ButtonStyle.red, label="Exit", disabled=False, custom_id="Giveaway:Exit"), create_button(style=ButtonStyle.blurple, label=f"Total Entries: {len(data['entries'])}", custom_id="Giveaway:Count", disabled=False, emoji=emoji)]
+				buttons = [create_button(style=ButtonStyle.green, label="Enter", emoji=emoji2, disabled=False, custom_id="Giveaway:Enter"), create_button(style=ButtonStyle.red, label="Exit", disabled=False, custom_id="Giveaway:Exit", emoji=exit), create_button(style=ButtonStyle.blurple, label=f"Total Entries: {len(data['entries'])}", custom_id="Giveaway:Count", disabled=False, emoji=emoji)]
 				await message.edit(components=[create_actionrow(*buttons)])
 				return await ctx.send("you have successfully Entered Giveaway", hidden=True)
 
@@ -296,8 +298,9 @@ class giveaway(commands.Cog):
 				emojig = self.bot.get_guild(888085276801531967)
 				emoji = await emojig.fetch_emoji(893744091710509097)
 				emoji2 = await emojig.fetch_emoji(893787497920876544)
+				exit = await emojig.fetch_emoji(893900833463349278)
 
-				buttons = [create_button(style=ButtonStyle.green, label="Enter", emoji=emoji2, disabled=False, custom_id="Giveaway:Enter"), create_button(style=ButtonStyle.red, label="Exit", disabled=False, custom_id="Giveaway:Exit"), create_button(style=ButtonStyle.blurple, label=f"Total Entries: {len(data['entries'])}", custom_id="Giveaway:Count", disabled=False, emoji=emoji)]
+				buttons = [create_button(style=ButtonStyle.green, label="Enter", emoji=emoji2, disabled=False, custom_id="Giveaway:Enter"), create_button(style=ButtonStyle.red, label="Exit", disabled=False, custom_id="Giveaway:Exit", emoji=exit), create_button(style=ButtonStyle.blurple, label=f"Total Entries: {len(data['entries'])}", custom_id="Giveaway:Count", disabled=False, emoji=emoji)]
 				await message.edit(components=[create_actionrow(*buttons)])
 				return await ctx.send("Your Entery has been successfully removed", hidden=True)
 
@@ -306,8 +309,9 @@ class giveaway(commands.Cog):
 				emojig = self.bot.get_guild(888085276801531967)
 				emoji = await emojig.fetch_emoji(893744091710509097)
 				emoji2 = await emojig.fetch_emoji(893787497920876544)
+				exit = await emojig.fetch_emoji(893900833463349278)
 
-				buttons = [create_button(style=ButtonStyle.green, label="Enter", emoji=emoji2, disabled=False, custom_id="Giveaway:Enter"), create_button(style=ButtonStyle.red, label="Exit", disabled=False, custom_id="Giveaway:Exit"), create_button(style=ButtonStyle.blurple, label=f"Total Entries: {len(data['entries'])}", custom_id="Giveaway:Count", disabled=False, emoji=emoji)]
+				buttons = [create_button(style=ButtonStyle.green, label="Enter", emoji=emoji2, disabled=False, custom_id="Giveaway:Enter"), create_button(style=ButtonStyle.red, label="Exit", disabled=False, custom_id="Giveaway:Exit", emoji=exit), create_button(style=ButtonStyle.blurple, label=f"Total Entries: {len(data['entries'])}", custom_id="Giveaway:Count", disabled=False, emoji=emoji)]
 				await message.edit(components=[create_actionrow(*buttons)])
 				return await ctx.send("Your have not entered in this giveaway",hidden=True)
 
@@ -431,6 +435,7 @@ class giveaway(commands.Cog):
 			]
 		)
 	async def gend(self, ctx, message_id, channel: discord.TextChannel=None):
+		await ctx.defer(hidden=True)
 		guild = ctx.guild
 		message = await channel.fetch_message(int(message_id))
 		data = await self.bot.give.find(message.id)
@@ -458,7 +463,7 @@ class giveaway(commands.Cog):
 			emoji2 = await emojig.fetch_emoji(893787497920876544)
 			exit = await emojig.fetch_emoji(893900833463349278)
 
-			buttons = [create_button(style=ButtonStyle.green, label="Enter", emoji=emoji2, disabled=True, custom_id="Giveaway:Enter"), create_button(style=ButtonStyle.red, label="Exit", disabled=True, custom_id="Giveaway:Exit", emoji=exit), create_button(style=ButtonStyle.blurple, label=f"Total Entries: {len(data['entries'])}", custom_id="Giveaway:Count", disabled=True, emoji=emoji)]
+			buttons = [create_button(style=ButtonStyle.green, label="Enter", emoji=emoji2, disabled=True, custom_id="Giveaway:Enter"), create_button(style=ButtonStyle.red, label="Exit", disabled=True, custom_id="Giveaway:Exit", emoji=exit), create_button(style=ButtonStyle.blurple, label=f"Total Entries: {len(backup['entries'])}", custom_id="Giveaway:Count", disabled=True, emoji=emoji)]
 			await message.edit(embed=embed.from_dict(edict), components=[create_actionrow(*buttons)])
 
 			small_embed = discord.Embed(description=f"No valid [entrants]({message.jump_url}) so the winner could not be determined", color=0x2f3136)
@@ -503,8 +508,8 @@ class giveaway(commands.Cog):
 			emoji2 = await emojig.fetch_emoji(893787497920876544)
 			exit = await emojig.fetch_emoji(893900833463349278)
 
-			buttons = [create_button(style=ButtonStyle.green, label="Enter", emoji=emoji2, disabled=True, custom_id="Giveaway:Enter"), create_button(style=ButtonStyle.red, label="Exit", disabled=True, custom_id="Giveaway:Exit", emoji=exit), create_button(style=ButtonStyle.blurple, label=f"Total Entries: {len(data['entries'])}", custom_id="Giveaway:Count", disabled=True, emoji=emoji)]
-			await message.edit(embed=embed.from_dict(edict), components=[create_actionrow(*buttons)])
+			buttons = [create_button(style=ButtonStyle.green, label="Enter", emoji=emoji2, disabled=True, custom_id="Giveaway:Enter"), create_button(style=ButtonStyle.red, label="Exit", disabled=True, custom_id="Giveaway:Exit", emoji=exit), create_button(style=ButtonStyle.blurple, label=f"Total Entries: {len(backup['entries'])}", custom_id="Giveaway:Count", disabled=True, emoji=emoji)]
+			await message.edit(embed=embed.from_dict(gdata), components=[create_actionrow(*buttons)])
 
 			await ctx.send("Giveaway has been ended", hidden=True)
 			await self.bot.give.delete(message.id)
@@ -527,6 +532,7 @@ class giveaway(commands.Cog):
 			]
 		)
 	async def greroll(self, ctx, message_id, winners: int, channel=None,):
+		await ctx.defer(hidden=True)
 		try:
 			message = await channel.fetch_message(int(message_id))
 		except:
@@ -566,6 +572,7 @@ class giveaway(commands.Cog):
 		await message.edit(embed=embed.from_dict(gdata), components=[create_actionrow(*buttons)])
 		await message.reply(
 			f"Congratulations {reply}! You won the {price}")
+		await ctx.send(f"The Giveaway Winners are {reply}", hidden=True)
 
 	@cog_ext.cog_slash(name="gdelete", description="Delete a giveaway", guild_ids=guild_ids,default_permission=False,
 		permissions=admin_perms,

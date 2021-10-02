@@ -32,16 +32,6 @@ class Basic(commands.Cog, description=description):
             return ctx.message.author.id in [488614633670967307, 573896617082748951,573896617082748951]
         return commands.check(predicate)
 
-    @commands.command()
-    @commands.dm_only()
-    async def apply(self, ctx, invite: discord.Invite):
-        channel = self.bot.get_channel(891669710163288094)
-        embed = discord.Embed(title="Apply Request", description=f"Whitelist Request from: `{ctx.author.name}`\nServer Invite: `{invite}`" )
-        embed.set_footer(text=ctx.author.name, icon_url=ctx.author.avatar_url)
-        embed.timestamp = datetime.datetime.utcnow()
-        await channel.send(embed=embed)
-        await ctx.send("Your Request has been Sent")
-
     @commands.Cog.listener()
     async def on_ready(self):
         print(f"{self.__class__.__name__} Cog has been loaded\n-----")
@@ -113,7 +103,7 @@ class Basic(commands.Cog, description=description):
         main_embed.set_footer(text=self.bot.user.name, icon_url=self.bot.user.avatar_url)
         main_embed.timestamp = timestamp
 
-        basic_embed = discord.Embed(title="Basic Commands", description=f"These Commands are the basic commands to show the bot's ping, server count, total users, etc.\n\n**__Commands:__**\n\n**1. /ping** \n> Shows the bot's latency.\n\n**2. /stats**\n> An useful command that displays the bot's statistics.\n\n**3. >apply**\n> A command where other partner communities can apply for their server to get whitelisted. (Only works in the bot's DM)\n> Example: >apply <server_invite>",color=0x2f3136)
+        basic_embed = discord.Embed(title="Basic Commands", description=f"These Commands are the basic commands to show the bot's ping, server count, total users, etc.\n\n**__Commands:__**\n\n**1. /ping** \n> Shows the bot's latency.\n\n**2. /stats**\n> An useful command that displays the bot's statistics.",color=0x2f3136)
         basic_embed.set_footer(text=self.bot.user.name, icon_url=self.bot.user.avatar_url)
         basic_embed.timestamp = timestamp
 
