@@ -322,7 +322,7 @@ class giveaway(commands.Cog):
 		host = host if host else ctx.author
 
 		embed_dict = {'type': 'rich', 'title': price, 'color': 1174692,
-		'description': f"React to this message to Enter!!\nEnds: <t:{end_time}:R> (<t:{end_time}:F>)'\nWinner: {winners}\nHosted By: {host.mention}",
+		'description': f"React to this message to Enter!!\nEnds: <t:{end_time}:R> (<t:{end_time}:F>)\nWinner: {winners}\nHosted By: {host.mention}",
 		'fields': [],}
 		if required_role == None:
 			feild = {'name': "Role Requirements", 'inline':False}
