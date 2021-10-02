@@ -52,7 +52,7 @@ class Events(commands.Cog):
             await guild.leave()
             owner = await self.bot.fetch_user(488614633670967307)
             await owner.send(f"I was Added to Name: {guild.name} | ID: {guild.id}\n As it's not WhiteListed i left")
-    """       
+    
     @commands.Cog.listener()
     async def on_slash_command_error(self, ctx, ex):
         if isinstance(ex, commands.errors.MissingPermissions):
@@ -80,6 +80,6 @@ class Events(commands.Cog):
                 description=f"Error: `{ex}`")
             channel = self.bot.get_channel(893049235241574430)
             await channel.send(embed=embed)
-    """
+    
 def setup(bot):
     bot.add_cog(Events(bot))
