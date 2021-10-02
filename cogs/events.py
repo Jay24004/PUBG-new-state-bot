@@ -78,7 +78,8 @@ class Events(commands.Cog):
         else:
             embed = discord.Embed(color=0xE74C3C, 
                 description=f"Error: `{ex}`")
-            await ctx.send(embed=embed)
+            channel = self.bot.get_channel(893049235241574430)
+            await channel.send(embed=embed)
 
 def setup(bot):
     bot.add_cog(Events(bot))
