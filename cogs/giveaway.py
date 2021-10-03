@@ -19,7 +19,7 @@ from amari import AmariClient
 time_regex = re.compile("(?:(\d{1,5})(h|s|m|d))+?")
 
 time_dict = {"h": 3600, "s": 1, "m": 60, "d": 86400}
-guild_ids=[888085276801531967]
+guild_ids=[888085276801531967, 814374218602512395, 829615142450495601]
 
 admin_perms = {
 	829615142450495601: [	#BD
