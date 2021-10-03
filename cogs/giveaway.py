@@ -22,6 +22,12 @@ time_dict = {"h": 3600, "s": 1, "m": 60, "d": 86400}
 guild_ids=[888085276801531967, 814374218602512395, 829615142450495601]
 
 admin_perms = {
+	814374218602512395:
+	[
+	create_permission(488614633670967307, SlashCommandPermissionType.USER, True),
+	create_permission(814405582177435658, SlashCommandPermissionType.ROLE, True),
+	create_permission(886551491744264222, SlashCommandPermissionType.ROLE, True)
+	],
 	829615142450495601: [	#BD
 	create_permission(567374379575672852, SlashCommandPermissionType.USER, True),
 	create_permission(488614633670967307, SlashCommandPermissionType.USER, True),
@@ -102,6 +108,7 @@ class giveaway(commands.Cog):
 					edict['title'] = f"{edict['title']} • Giveaway Has Ended"
 					edict['color'] = 15158332
 					edict['description'] = re.sub(r'(Ends)',r'Ended', edict['description'])
+					edict['description'] = re.sub(r'(Use)( )(enter)( )(button)( )(to)( )(join!!)',r'', edict['description'])
 					
 					emojig = self.bot.get_guild(888085276801531967)
 					emoji = await emojig.fetch_emoji(893744091710509097)
@@ -138,6 +145,7 @@ class giveaway(commands.Cog):
 
 					gdata['title'] = f"{gdata['title']} • Giveaway Has Ended"
 					gdata['description'] = re.sub(r'(Ends)',r'Ended', gdata['description'])
+					gdata['description'] = re.sub(r'(Use)( )(enter)( )(button)( )(to)( )(join!!)',r'', gdata['description'])
 					gdata['color'] = 15158332
 					field = {'name': "Winner!", 'value': ", ".join(winner_list), 'inline': False}
 					try:
@@ -200,7 +208,7 @@ class giveaway(commands.Cog):
 								await user.send(embed=embed)
 							except discord.HTTPException:
 								pass
-							return await ctx.send("Your Entery has been declined because you don't meet the requirment", hidden=True)
+							return await ctx.send("Your Entry has been declined because you don't meet the requirement", hidden=True)
 					else:
 						embed = discord.Embed(title="Entry Declined:",
 								description=f"Your entry for this [Giveaway]({message.jump_url}) has been declined.\nReason: You don't have the Required Role`{required_role.name}`",color=0xE74C3C)
@@ -210,7 +218,7 @@ class giveaway(commands.Cog):
 							await user.send(embed=embed)
 						except discord.HTTPException:
 							pass
-						return await ctx.send("Your Entery has been declined because you don't meet the requirment", hidden=True)
+						return await ctx.send("Your Entry has been declined because you don't meet the requirement", hidden=True)
 
 			if data['amari_level']:
 				user_level = await amari_api.fetch_user(user.guild.id, user.id)
@@ -228,7 +236,7 @@ class giveaway(commands.Cog):
 								await user.send(embed=embed)
 							except discord.HTTPException:
 								pass
-							return await ctx.send("Your Entery has been declined because you don't meet the requirment", hidden=True)
+							return await ctx.send("Your Entry has been declined because you don't meet the requirement", hidden=True)
 					else:
 						embed = discord.Embed(title="Entery Decline:",
 							description=f"Your Entery for this [Giveaway]({message.jump_url}) has been declined\nReason:Required amari level to join the giveaway `{required['amari_level']}`", color=0xE74C3C)
@@ -238,7 +246,7 @@ class giveaway(commands.Cog):
 							await user.send(embed=embed)
 						except discord.HTTPException:
 							pass 
-						return await ctx.send("Your Entery has been declined because you don't meet the requirment", hidden=True)
+						return await ctx.send("Your Entry has been declined because you don't meet the requirement", hidden=True)
 
 			if data['weekly_amari']:
 				user_level = await amari_api.fetch_user(user.guild.id, user.id)
@@ -256,7 +264,7 @@ class giveaway(commands.Cog):
 								await user.send(embed=embed)
 							except discord.HTTPException:
 								pass 
-							return await ctx.send("Your Entery has been declined because you don't meet the requirment", hidden=True)
+							return await ctx.send("Your Entry has been declined because you don't meet the requirement", hidden=True)
 					else:
 						embed = discord.Embed(title="Entery Decline:",
 							description=f"Your Entery for this [Giveaway]({message.jump_url}) has been declined\nReason:You don't have Required Weekly Amari `{required['weekly_amari']}`", color=0xE74C3C)
@@ -266,10 +274,10 @@ class giveaway(commands.Cog):
 							await user.send(embed=embed)
 						except discord.HTTPException:
 							pass
-						return await ctx.send("Your Entery has been declined because you don't meet the requirment", hidden=True)
+						return await ctx.send("Your Entry has been declined because you don't meet the requirement", hidden=True)
 
 			if ctx.author.id in data['entries']:
-				return await ctx.send("You have already Entered in this giveaway", hidden=True)
+				return await ctx.send("You have already entered in this giveaway", hidden=True)
 
 			if ctx.author.id not in data['entries']:
 				data['entries'].append(ctx.author.id)
@@ -283,7 +291,7 @@ class giveaway(commands.Cog):
 
 				buttons = [create_button(style=ButtonStyle.green, label="Enter", emoji=emoji2, disabled=False, custom_id="Giveaway:Enter"), create_button(style=ButtonStyle.red, label="Exit", disabled=False, custom_id="Giveaway:Exit", emoji=exit), create_button(style=ButtonStyle.blurple, label=f"Total Entries: {len(data['entries'])}", custom_id="Giveaway:Count", disabled=False, emoji=emoji)]
 				await message.edit(components=[create_actionrow(*buttons)])
-				return await ctx.send("you have successfully Entered Giveaway", hidden=True)
+				return await ctx.send("you have successfully entered giveaway", hidden=True)
 
 		if ctx.custom_id == "Giveaway:Exit":
 			data = await self.bot.give.find(ctx.origin_message.id)
@@ -302,7 +310,7 @@ class giveaway(commands.Cog):
 
 				buttons = [create_button(style=ButtonStyle.green, label="Enter", emoji=emoji2, disabled=False, custom_id="Giveaway:Enter"), create_button(style=ButtonStyle.red, label="Exit", disabled=False, custom_id="Giveaway:Exit", emoji=exit), create_button(style=ButtonStyle.blurple, label=f"Total Entries: {len(data['entries'])}", custom_id="Giveaway:Count", disabled=False, emoji=emoji)]
 				await message.edit(components=[create_actionrow(*buttons)])
-				return await ctx.send("Your Entery has been successfully removed", hidden=True)
+				return await ctx.send("You have successfully removed your entry from this giveaway", hidden=True)
 
 			if ctx.author.id not in data['entries']:
 
@@ -313,7 +321,7 @@ class giveaway(commands.Cog):
 
 				buttons = [create_button(style=ButtonStyle.green, label="Enter", emoji=emoji2, disabled=False, custom_id="Giveaway:Enter"), create_button(style=ButtonStyle.red, label="Exit", disabled=False, custom_id="Giveaway:Exit", emoji=exit), create_button(style=ButtonStyle.blurple, label=f"Total Entries: {len(data['entries'])}", custom_id="Giveaway:Count", disabled=False, emoji=emoji)]
 				await message.edit(components=[create_actionrow(*buttons)])
-				return await ctx.send("Your have not entered in this giveaway",hidden=True)
+				return await ctx.send("You have not entered in this giveaway",hidden=True)
 
 
 		if ctx.custom_id == "Giveaway:Count":
@@ -358,7 +366,7 @@ class giveaway(commands.Cog):
 		host = host if host else ctx.author
 
 		embed_dict = {'type': 'rich', 'title': price, 'color': 10370047,
-		'description': f"Use blow button to Enter!!\nEnds: <t:{end_time}:R> (<t:{end_time}:F>)\nWinner: {winners}\nHosted By: {host.mention}",
+		'description': f"Use enter button to join!!\nEnds: <t:{end_time}:R> (<t:{end_time}:F>)\nWinner: {winners}\nHosted By: {host.mention}",
 		'fields': [],}
 		if required_role == None:
 			feild = {'name': "Role Requirements", 'inline':False}
@@ -420,7 +428,8 @@ class giveaway(commands.Cog):
 			data['b_role'] = None
 
 		if note:
-			await ctx.channel.send(note)
+			embed = discord.Embed(description=f"**Note:**\n{note}", color=0x2f3136)
+			await ctx.channel.send(embed=embed)
 
 		await self.bot.give.upsert(data)
 		self.bot.giveaway[msg.id] = data
@@ -457,6 +466,7 @@ class giveaway(commands.Cog):
 			edict['title'] = f"{edict['title']} • Giveaway Has Ended"
 			edict['color'] = 15158332
 			edict['description'] = re.sub(r'(Ends)',r'Ended', edict['description'])
+			edict['description'] = re.sub(r'(Use)( )(enter)( )(button)( )(to)( )(join!!)',r'', edict['description'])
 			
 			emojig = self.bot.get_guild(888085276801531967)
 			emoji = await emojig.fetch_emoji(893744091710509097)
@@ -495,6 +505,8 @@ class giveaway(commands.Cog):
 
 			gdata['title'] = f"{gdata['title']} • Giveaway Has Ended"
 			gdata['description'] = re.sub(r'(Ends)',r'Ended', gdata['description'])
+			gdata['description'] = re.sub(r'(Use)( )(enter)( )(button)( )(to)( )(join!!)',r'', gdata['description'])
+
 			gdata['color'] = 15158332
 			field = {'name': "Winner!", 'value': ", ".join(winner_list), 'inline': False}
 			try:

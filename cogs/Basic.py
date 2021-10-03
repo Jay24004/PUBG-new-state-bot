@@ -65,6 +65,7 @@ class Basic(commands.Cog, description=description):
         dpyVersion = discord.__version__
         serverCount = len(self.bot.guilds)
         memberCount = len(set(self.bot.get_all_members()))
+        main_guild = self.bot.get_guild(814374218602512395)
         cpu = round(psutil.cpu_percent(), 1)
 
         embed = discord.Embed(
@@ -81,8 +82,12 @@ class Basic(commands.Cog, description=description):
         embed.add_field(name="CPU Useage:", value=f"{str(cpu)}%")
         embed.add_field(name="RAM Useage:",
                         value=f"{round(psutil.virtual_memory().percent,1)}%")
-        embed.add_field(name="Bot Developers:",
-                        value="<@488614633670967307>")
+
+        code = main_guild.get_member(488614633670967307)
+        eng1 = main_guild.get_member(567374379575672852)
+        eng2 = main_guild.get_member(573896617082748951)
+        embed.add_field(name="Bot's Maintainers:",
+                        value=f"**Developer**: {code.mention}\n**Writers**{eng1.mention},{eng2.mention}")
         embed.set_footer(
             text=f"Developed by Jay | {self.bot.user.name}",icon_url=self.bot.user.avatar_url)
         await ctx.send(embed=embed, delete_after=60)
