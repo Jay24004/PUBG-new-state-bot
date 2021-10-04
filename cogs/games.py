@@ -10,6 +10,10 @@ from discord_slash.utils.manage_components import create_button, create_actionro
 from discord_slash.model import ButtonStyle
 from discord_slash.context import ComponentContext
 
+
+
+
+
 class games(commands.Cog):
 	def __init__ (self, bot):
 		self.bot = bot
@@ -180,7 +184,7 @@ class games(commands.Cog):
 					await msg.edit(embed=embed, components=[create_actionrow(*buttons)])
 
 				if res.component['label'].lower() == "again":
-					buttons = [create_button(style=ButtonStyle.grey, label="Rock", emoji="🤜"), create_button(style=ButtonStyle.green, label="paper", emoji="✋"), create_button(style=ButtonStyle.blurple, label="scissors", emoji="✌️")]
+					buttons = [create_button(style=ButtonStyle.grey, label="Rock", emoji="🤜"), create_button(style=ButtonStyle.green, label="Paper", emoji="✋"), create_button(style=ButtonStyle.blurple, label="Scissors", emoji="✌️")]
 					await msg.edit(embed=main_embed,components=[create_actionrow(*buttons)])
 
 				if res.component['label'].lower() == "exit":

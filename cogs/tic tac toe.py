@@ -1,240 +1,256 @@
 import asyncio
-import copy
-import enum
-import math
+import dataclasses
+import logging
 import random
-import typing
+from itertools import islice
+from string import Template
 
 import discord
-import discord_slash.model
 from discord.ext import commands
-from discord_slash import cog_ext, SlashContext, ComponentContext
-from discord_slash.cog_ext import cog_component
-from discord_slash.utils import manage_commands, manage_components
-from discord_slash.model import ButtonStyle
+
+from utils import Winner, TicTacToe, InvalidMove, PlayerStats
+from utils.util import Pag
 
 
-
-class GameState(enum.IntEnum):
-    empty = 0
-    player = -1
-    ai = +1
-
-
-BoardTemplate = [[0, 0, 0], [0, 0, 0], [0, 0, 0]]
-
-
-def determine_board_state(components: list) -> typing.List[list]:
-    """
-    Extrapolate the current state of the game based on the components of a message
-    :param components: The components object from a message
-    :return: The test_board state
-    :rtype: list[list]
-    """
-    board = copy.deepcopy(BoardTemplate)
-    for i in range(3):
-        for x in range(3):
-            button = components[i]["components"][x]
-            if button["style"] == 2:
-                board[i][x] = GameState.empty
-            elif button["style"] == 1:
-                board[i][x] = GameState.player
-            elif button["style"] == 4:
-                board[i][x] = GameState.ai
-    return board
-
-
-def render_board(board: list, disable=False) -> list:
-    """
-    Converts the test_board into a visual representation using discord components
-    :param board: The game test_board
-    :param disable: Disable the buttons on the test_board
-    :return: List[action-rows]
-    """
-    buttons = []
-    for i in range(3):
-        for x in range(3):
-            if board[i][x] == GameState.empty:
-                style = ButtonStyle.grey
-            elif board[i][x] == GameState.player:
-                style = ButtonStyle.blurple
-            else:
-                style = ButtonStyle.red
-            buttons.append(
-                manage_components.create_button(
-                    style=style,
-                    label="‎",
-                    custom_id=f"tic_tac_toe_button||{i},{x}",
-                    disabled=disable,
-                )
-            )
-    return manage_components.spread_to_rows(*buttons, max_in_row=3)
-
-
-def determine_win_state(board: list, player: GameState) -> bool:
-    """
-    Determines if the specified player has won
-    :param board: The game test_board
-    :param player: The player to check for
-    :return: bool, have they won
-    """
-    win_states = [
-        [board[0][0], board[0][1], board[0][2]],
-        [board[1][0], board[1][1], board[1][2]],
-        [board[2][0], board[2][1], board[2][2]],
-        [board[0][0], board[1][0], board[2][0]],
-        [board[0][1], board[1][1], board[2][1]],
-        [board[0][2], board[1][2], board[2][2]],
-        [board[0][0], board[1][1], board[2][2]],
-        [board[2][0], board[1][1], board[0][2]],
-    ]
-    if [player, player, player] in win_states:
-        return True
-    return False
-
-
-def determine_possible_positions(board: list) -> list:
-    """
-    Determines all the possible positions in the current game state
-    :param board: The game test_board
-    :return: A list of possible positions
-    """
-    possible_positions = []
-    for i in range(3):
-        for x in range(3):
-            if board[i][x] == GameState.empty:
-                possible_positions.append([i, x])
-    return possible_positions
-
-
-def evaluate(board):
-    if determine_win_state(board, GameState.ai):
-        score = +1
-    elif determine_win_state(board, GameState.player):
-        score = -1
-    else:
-        score = 0
-    return score
-
-
-def min_max(test_board: list, depth: int, player: GameState):
-    if player == GameState.ai:
-        best = [-1, -1, -math.inf]
-    else:
-        best = [-1, -1, +math.inf]
-
-    if (
-        depth == 0
-        or determine_win_state(test_board, GameState.player)
-        or determine_win_state(test_board, GameState.ai)
-    ):
-        score = evaluate(test_board)
-        return [-1, -1, score]
-
-    for cell in determine_possible_positions(test_board):
-        x, y = cell[0], cell[1]
-        test_board[x][y] = player
-        score = min_max(test_board, depth - 1, -player)
-        test_board[x][y] = GameState.empty
-        score[0], score[1] = x, y
-
-        if player == GameState.ai:
-            if score[2] > best[2]:
-                best = score
-        else:
-            if score[2] < best[2]:
-                best = score
-    return best
-
-
-class TicTacToe(commands.Cog):
+class Games(commands.Cog):
     def __init__(self, bot):
-        self.bot: commands.Bot = bot
+        self.bot = bot
+        self.stats = {}
+        self.logger = logging.getLogger(__name__)
 
     def is_bot_channel():
         async def predicate(ctx):
             data = await ctx.bot.config.find(ctx.guild.id)
             if data is None: return await ctx.send("This is not a bot-channel or there is no bot channel in server", hidden=True)
-            return ctx.channel.id in data['bot_channel']
+            if data:
+                return ctx.channel.id == data['bot_channel'] or ctx.channel.id in data['bot_channel']
+            else:
+                return False
         return commands.check(predicate)
+
+    async def chunk_results(self, it, size):
+        it = iter(it)
+        return iter(lambda: tuple(islice(it, size)), ())
+
+    async def display_board(self, messageable, game, *, content=None):
+        board = game.board
+        desc = f"""
+        ```yaml
+          1|2|3
+        1|{board[0][0].to_piece()}|{board[0][1].to_piece()}|{board[0][2].to_piece()}
+        2|{board[1][0].to_piece()}|{board[1][1].to_piece()}|{board[1][2].to_piece()}
+        3|{board[2][0].to_piece()}|{board[2][1].to_piece()}|{board[2][2].to_piece()}
+        ```
+        """
+
+        embed = discord.Embed(
+            title=f"TicTacToe ({game.player_one.display_name} VS {game.player_two.display_name})",
+            description=desc,
+        )
+        await messageable.edit(content=content, embed=embed)
+
+    async def update_stats(self, member, end_state, was_player_one):
+        player = self.stats.get(member.id, PlayerStats(member.id))
+
+        if end_state.value == 1:
+            if was_player_one:
+                player.wins += 1
+            else:
+                player.losses += 1
+
+        elif end_state.value == 2:
+            if was_player_one:
+                player.losses += 1
+            else:
+                player.wins += 1
+
+        elif end_state.value == 3:
+            player.draws += 1
+
+        self.stats[member.id] = player
+
+        data = dataclasses.asdict(player)
+        data["_id"] = data.pop("player_id")
+        await self.bot.tictactoe.upsert(data)
+
+    async def populate_stats(self):
+        # Handle on_ready being called multiple times
+        if self.stats:
+            return
+
+        data = await self.bot.tictactoe.get_all()
+        for document in data:
+            player = PlayerStats(
+                document["_id"],
+                wins=document["wins"],
+                losses=document["losses"],
+                draws=document["draws"],
+            )
+            self.stats[document["_id"]] = player
 
     @commands.Cog.listener()
     async def on_ready(self):
-        print(f"{self.__class__.__name__} Cog has been loaded\n-----")
+        self.logger.info("I'm ready!")
+        await self.populate_stats()
 
-    @cog_ext.cog_slash(
-        name="TicTacToe",
-        description="Start a game of tic tac toe",
-        guild_ids=None,
-    )
+    @commands.command(aliases=["ttt"])
+    @commands.max_concurrency(1, commands.BucketType.channel)
     @is_bot_channel()
-    @commands.cooldown(3,60 , commands.BucketType.user)
-    async def ttt_start(self, ctx: SlashContext):
-        await ctx.send(
-            content=f"{ctx.author.mention}'s tic tac toe game",
-            components=render_board(copy.deepcopy(BoardTemplate)),
+    async def tictactoe(self, ctx, player_two: discord.Member = None):
+        def check(m):
+            return m.channel == ctx.channel and m.author == current_player
+
+        def react_check(payload):
+            return (
+                payload.message_id == difficulty_message.id
+                and payload.user_id == ctx.author.id
+                and str(payload.emoji) in ["1️⃣", "2⃣"]
+            )
+
+        is_bot = False
+        difficulty = 1
+        # Disable difficulty atm
+        if not player_two or player_two == ctx.guild.me and False:
+            player_two = ctx.guild.me
+            is_bot = True
+
+            embed = discord.Embed(
+                title="Please pick a difficulty",
+                description=":one: - Easy\n:two: - Hard",
+            )
+
+            difficulty_message = await ctx.send(embed=embed)
+            await difficulty_message.add_reaction("1️⃣")
+            await difficulty_message.add_reaction("2⃣")
+
+            try:
+                payload = await self.bot.wait_for(
+                    "raw_reaction_add", check=react_check, timeout=25
+                )
+            except asyncio.TimeoutError:
+                await ctx.send("I picked hard on your behalf :)")
+            else:
+                if str(payload.emoji) == "1️⃣":
+                    difficulty = 2.5
+                    await ctx.send("Set difficulty to easy", delete_after=10)
+                else:
+                    await ctx.send("Set difficulty to hard", delete_after=10)
+            finally:
+                await difficulty_message.delete()
+
+        m = await ctx.send("Starting game!")
+
+        game = TicTacToe(
+            player_one=ctx.author,
+            player_two=player_two,
+            is_agaisnt_computer=is_bot,
+            difficulty=difficulty,
         )
 
-    def determine_board_state(self, components: list):
-        board = []
-        for i in range(3):
-            row = components[i]["components"]
-            for button in row:
-                if button["style"] == 2:
-                    board.append(GameState.empty)
-                elif button["style"] == 1:
-                    board.append(GameState.player)
-                elif button["style"] == 4:
-                    board.append(GameState.ai)
+        player_one_start = random.choice([True, False])
+        if not player_one_start:
+            await game.flip_player()
 
-        return board
+        await self.display_board(m, game)
 
-    @cog_component(components=render_board(board=copy.deepcopy(BoardTemplate)))
-    async def process_turn(self, ctx: ComponentContext):
-        await ctx.defer(edit_origin=True)
-        try:
-            if ctx.author.id != ctx.origin_message.mentions[0].id:
-                return
-        except:
-            return
-        button_pos = (ctx.custom_id.split("||")[-1]).split(",")
-        button_pos = [int(button_pos[0]), int(button_pos[1])]
-        components = ctx.origin_message.components
+        while (winner := await game.is_over()) == Winner.NO_WINNER:
+            current_player = ctx.author if game.is_player_one_move else player_two
 
-        _board = determine_board_state(components)
+            if not game.is_player_one_move and is_bot:
+                await self.display_board(
+                    m,
+                    game,
+                    content=f"{current_player.mention}, please pick where you wish to play in the format `row column`",
+                )
+                await game.ai_turn()
+                await asyncio.sleep(random.randrange(0, 5))
+                continue
 
-        if _board[button_pos[0]][button_pos[1]] == GameState.empty:
-            _board[button_pos[0]][button_pos[1]] = GameState.player
-            if not determine_win_state(_board, GameState.player):
-                # ai pos
-                if len(determine_possible_positions(_board)) != 0:
-                    depth = len(determine_possible_positions(_board))
+            try:
+                await self.display_board(
+                    m,
+                    game,
+                    content=f"{current_player.mention}, please pick where you wish to play in the format `row column`",
+                )
+                msg = await self.bot.wait_for("message", check=check, timeout=25)
+            except asyncio.TimeoutError:
+                await game.flip_player()
+                await ctx.send(f"{current_player.mention}, you missed your turn!")
+            else:
+                content = msg.content
 
-                    move = await asyncio.to_thread(
-                        min_max, copy.deepcopy(_board), depth, GameState.ai
+                await msg.delete()
+
+                if not len(content) == 3:
+                    await ctx.send(
+                        f"{current_player.mention}, Invalid move sequence, please see the format and try again",
+                        delete_after=10,
                     )
-                    x, y = move[0], move[1]
-                    _board[x][y] = GameState.ai
-        else:
-            return
+                    continue
 
-        if determine_win_state(_board, GameState.player):
-            winner = ctx.author.mention
-        elif determine_win_state(_board, GameState.ai):
-            winner = self.bot.user.mention
-        elif len(determine_possible_positions(_board)) == 0:
-            winner = "Nobody"
-        else:
-            winner = None
+                row, column = content.split()
+                try:
+                    await game.make_move(row, column)
+                except InvalidMove:
+                    await ctx.send(
+                        f"{current_player.mention}, illegal move sequence, please try again",
+                        delete_after=10,
+                    )
+                    continue
 
-        _board = render_board(_board, disable=winner is not None)
-
-        await ctx.edit_origin(
-            content=f"{ctx.author.mention}'s tic tac toe game"
-            if not winner
-            else f"{winner} has won!",
-            components=manage_components.spread_to_rows(*_board, max_in_row=3),
+        content = Template(str(winner)).safe_substitute(
+            {"MENTIONONE": ctx.author.mention, "MENTIONTWO": player_two.mention}
         )
+        await self.display_board(m, game, content=content)
 
-def setup(bot: commands.Bot):
-    bot.add_cog(TicTacToe(bot))
+        await self.update_stats(ctx.author, winner, True)
+        await self.update_stats(player_two, winner, False)
+
+    @commands.command()
+    @is_bot_channel()
+    async def stats(self, ctx, player: discord.Member = None):
+        """Returns your TicTacToe stats"""
+        player = player or ctx.author
+        if not (player_stats := self.stats.get(player.id)):
+            return await ctx.send(f"I have no stats for `{player.display_name}`")
+
+        embed = discord.Embed(
+            title=f"TicTacToe stats for: `{player.display_name}`",
+            description=f"Wins: **{player_stats.wins}**\n"
+            f"Losses: **{player_stats.losses}**\n"
+            f"Draws: **{player_stats.draws}**",
+            timestamp=ctx.message.created_at,
+        )
+        await ctx.send(embed=embed)
+
+    @commands.command(aliases=["lb"])
+    @is_bot_channel()
+    async def leaderboard(self, ctx, stat_type="wins"):
+        """Shows the TicTacToe leaderboard"""
+        if (stat_type := stat_type.lower()) not in ["wins", "losses", "draws"]:
+            return await ctx.send("Invalid stat type requested!")
+
+        data = list(self.stats.values())
+        if not data:
+            return await ctx.send("I have no stats to show.")
+
+        data = sorted(data, key=lambda x: getattr(x, stat_type), reverse=True)
+        data = await self.chunk_results(data, 10)
+
+        pages = []
+        for item in data:
+            page = ""
+            for result in item:
+                page += f"<@{result.player_id}> - {getattr(result, stat_type)} {stat_type}\n"
+            pages.append(page)
+
+        await Pag(
+            title=f"TicTacToe leaderboard for `{stat_type}`",
+            colour=0x11eca4,
+            entries=pages,
+            length=1,
+        ).start(ctx)
+
+
+def setup(bot):
+    bot.add_cog(Games(bot))

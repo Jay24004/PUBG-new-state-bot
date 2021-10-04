@@ -181,8 +181,8 @@ class giveaway(commands.Cog):
 
 	@commands.Cog.listener()
 	async def on_component(self, ctx: ComponentContext):
-		await ctx.defer(hidden=True)
 		if ctx.custom_id == "Giveaway:Enter":
+			await ctx.defer(hidden=True)
 			#await ctx.defer(hidden=True)
 			data = await self.bot.give.find(ctx.origin_message.id)
 			amari_api = AmariClient(self.bot.amari)
@@ -294,6 +294,7 @@ class giveaway(commands.Cog):
 				return await ctx.send("you have successfully entered giveaway", hidden=True)
 
 		if ctx.custom_id == "Giveaway:Exit":
+			await ctx.defer(hidden=True)
 			data = await self.bot.give.find(ctx.origin_message.id)
 			amari_api = AmariClient(self.bot.amari)
 			message = await ctx.channel.fetch_message(ctx.origin_message.id)
@@ -325,6 +326,7 @@ class giveaway(commands.Cog):
 
 
 		if ctx.custom_id == "Giveaway:Count":
+			await ctx.defer(hidden=True)
 			if ctx.author.guild_permissions.manage_messages:
 				data = await self.bot.give.find(ctx.origin_message.id)
 				entries, i  = [], 1

@@ -8,9 +8,9 @@ from discord_slash import cog_ext, SlashContext, cog_ext, SlashContext
 from discord_slash.utils.manage_commands import create_option, create_choice, create_permission
 from discord_slash.model import SlashCommandPermissionType
 			#bd 				#india				#nepal
-guild_ids=[829615142450495601, 814374218602512395, 777033462086762516,885802388001288262,819267038614519869]
+guild_ids=[829615142450495601, 814374218602512395, 777033462086762516,]
+819267038614519869
 
-814374218602512395
 staff_perm = {
 	829615142450495601:[ #bd 
 	create_permission(567374379575672852, SlashCommandPermissionType.USER, True),
@@ -31,20 +31,7 @@ staff_perm = {
 	777033462086762516:[ #nepal
 	create_permission(777033462086762519, SlashCommandPermissionType.ROLE, True),
 	create_permission(777033462086762520, SlashCommandPermissionType.ROLE, True),
-	],
-	819267038614519869:[	#egypt
-	create_permission(819306312889925632, SlashCommandPermissionType.ROLE, True),
-	create_permission(819267811549118505, SlashCommandPermissionType.ROLE, True),
-	],
-	885802388001288262:[	#FRANCE
-	create_permission(885814181549457418, SlashCommandPermissionType.ROLE, True),
-	create_permission(885815298110918666, SlashCommandPermissionType.ROLE, True),
-	create_permission(888409306616168560, SlashCommandPermissionType.ROLE, True),
-	create_permission(890486198471098368, SlashCommandPermissionType.ROLE, True),
-	create_permission(885814690138189824, SlashCommandPermissionType.ROLE, True),
-	create_permission(488614633670967307, SlashCommandPermissionType.USER, True)
 	]
-
 }
 
 staff_perm2 = {
@@ -66,20 +53,7 @@ staff_perm2 = {
 	777033462086762516:[ #nepal
 	create_permission(777033462086762519, SlashCommandPermissionType.ROLE, True),
 	create_permission(777033462086762520, SlashCommandPermissionType.ROLE, True),
-	],
-	819267038614519869:[	#egypt
-	create_permission(819306312889925632, SlashCommandPermissionType.ROLE, True),
-	create_permission(819267811549118505, SlashCommandPermissionType.ROLE, True),
-	],
-	885802388001288262:[	#FRANCE
-	create_permission(885814181549457418, SlashCommandPermissionType.ROLE, True),
-	create_permission(885815298110918666, SlashCommandPermissionType.ROLE, True),
-	create_permission(888409306616168560, SlashCommandPermissionType.ROLE, True),
-	create_permission(890486198471098368, SlashCommandPermissionType.ROLE, True),
-	create_permission(885814690138189824, SlashCommandPermissionType.ROLE, True),
-	create_permission(488614633670967307, SlashCommandPermissionType.USER, True)
 	]
-
 }
 
 class Misc(commands.Cog):
