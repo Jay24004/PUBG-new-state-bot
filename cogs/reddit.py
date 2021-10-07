@@ -74,7 +74,7 @@ class reddit(commands.Cog):
 		embed.set_image(url=post.url)
 		embed.set_footer(text=f"Request by {ctx.author}",icon_url=ctx.author.avatar_url)
 		embed.timestamp = datetime.datetime.utcnow()
-		await ctx.send(embed=embed)
+		await ctx.send(embed=embed, delete_after=60)
 
 def setup(bot):
 	bot.add_cog(reddit(bot))
