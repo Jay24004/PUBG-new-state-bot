@@ -141,7 +141,7 @@ class Basic(commands.Cog, description=description):
                 def custom_check(component_ctx: ComponentContext) -> bool:
                     if component_ctx.author == ctx.author:
                         return True
-                res: ComponentContext = await wait_for_component(self.bot, components=[create_actionrow(select)], check=custom_check, timeout=10)
+                res: ComponentContext = await wait_for_component(self.bot, components=[create_actionrow(select)], check=custom_check, timeout=60)
                 if int(res.selected_options[0]) == 1:
                     await res.edit_origin(embed=main_embed, components=[create_actionrow(select)])
                 if int(res.selected_options[0]) == 2:
