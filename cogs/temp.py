@@ -25,13 +25,42 @@ class profanity(commands.Cog):
 			if message.channel.id in [814381412210704415, 814381619581943828,886589931324076083,887247296721457192]: return
 			match = re.findall(links_regex, message.content)
 			if match:
-				logchannel = self.bot.get_channel(893049235241574430)
+				user = message.guild.get_member(message.author.id)
+				guild = message.guild
+
+				if user.guild_permissions.manage_messages or user.guild_permissions.administrator: return
+
+				data = await self.bot.config.find(message.guild.id)
+				if data is None: return
+
+				log_channel = self.bot.get_channel(data['log_channel'])
+				if log_channel is None: return
+
 				links = ",".join([x[0] for x in match])
-				embed = discord.Embed(title=f"{message.author.name}", description=f"Message: {message.content}\nChannel: {message.channel.mention}\nLinks:{links}", color=0x2f3136)
+				embed = discord.Embed(title=f"{message.author.name}", description=f"Link detected in message of {message.author.mention} in {message.channel.mention}\n{links}", color=0x2f3136)
 				embed.set_footer(text=f"ID: {message.author.id}", icon_url=message.author.avatar_url)
 				embed.timestamp = datetime.datetime.now()
 				embed.set_thumbnail(url=message.author.avatar_url)
-				await logchannel.send(embed=embed)
+				return await log_channel.send(embed=embed)
+			bad_match = re.findall(bad_regex, message.content)
+			if bad_match:
+				user = message.guild.get_member(message.author.id)
+				guild = message.guild
+
+				if user.guild_permissions.manage_messages or user.guild_permissions.administrator: return
+
+				data = await self.bot.config.find(message.guild.id)
+				if data is None: return
+
+				log_channel = self.bot.get_channel(data['log_channel'])
+				if log_channel is None: return
+
+				banned_words = ",".join([x[0] for x in bad_match])
+				embed = discord.Embed(title=f"{message.author.name}", description=f"Banned Word detected in message of {message.author.mention} in {message.channel.mention}\n{banned_words}", color=0x2f3136)
+				embed.set_footer(text=f"ID: {message.author.id}", icon_url=message.author.avatar_url)
+				embed.timestamp = datetime.datetime.now()
+				embed.set_thumbnail(url=message.author.avatar_url)
+				return await log_channel.send(embed=embed)
 
 def setup(bot):
 	bot.add_cog(profanity(bot))
