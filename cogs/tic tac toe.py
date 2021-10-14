@@ -54,7 +54,7 @@ class Games(commands.Cog):
         await messageable.edit(content=content, embed=embed)
 
     async def update_stats(self, member, end_state, was_player_one):
-        player = await self.bot.tictactoe.find_by_custom({})
+        player = self.stats.get(member.id, PlayerStats(member.id))
 
         if end_state.value == 1:
             if was_player_one:
@@ -97,7 +97,7 @@ class Games(commands.Cog):
         self.logger.info("I'm ready!")
         await self.populate_stats()
 
-    @cog_ext.cog_slash(name="tictactoe", description="TicTacToe Games", options=[create_option(name="player", description="select player you want to play with", option_type=8, required=False)],guild_ids=guild_ids)
+    @cog_ext.cog_slash(name="tictactoe", description="TicTacToe Games", options=[create_option(name="player_two", description="select player you want to play with", option_type=6, required=False)],guild_ids=guild_ids)
     @commands.max_concurrency(1, commands.BucketType.channel)
     #@is_bot_channel()
     async def tictactoe(self, ctx, player_two: discord.Member = None):
@@ -132,7 +132,7 @@ class Games(commands.Cog):
                     "raw_reaction_add", check=react_check, timeout=25
                 )
             except asyncio.TimeoutError:
-                await ctx.send("I picked hard on your behalf :)")
+                await ctx.send("I picked hard on your behalf :)", delete_after=20)
             else:
                 if str(payload.emoji) == "1️⃣":
                     difficulty = 2.5
@@ -179,7 +179,7 @@ class Games(commands.Cog):
                 msg = await self.bot.wait_for("message", check=check, timeout=25)
             except asyncio.TimeoutError:
                 await game.flip_player()
-                await ctx.send(f"{current_player.mention}, you missed your turn!")
+                await ctx.send(f"{current_player.mention}, you missed your turn!", delete_after=20)
             else:
                 content = msg.content
 
@@ -227,10 +227,10 @@ class Games(commands.Cog):
         )
         await ctx.send(embed=embed)
 
-    @cog_ext.cog_slash(name="leaderboard", description="shows leaderboard of tictactoe game", guild_ids=guild_ids,options=[create_option(name="type", description="select filter for the leaderboard", 
+    @cog_ext.cog_slash(name="leaderboard", description="shows leaderboard of tictactoe game", guild_ids=guild_ids,options=[create_option(name="stat_type", description="select filter for the leaderboard", 
         choices=[create_choice(
                 name="Wins",
-                value="aww"
+                value="wins"
                 ),
             create_choice(
                 name="Losses",
