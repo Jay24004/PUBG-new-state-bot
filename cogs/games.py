@@ -11,9 +11,6 @@ from discord_slash.model import ButtonStyle
 from discord_slash.context import ComponentContext
 
 
-
-
-
 class games(commands.Cog):
 	def __init__ (self, bot):
 		self.bot = bot

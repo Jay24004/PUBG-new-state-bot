@@ -4,13 +4,17 @@ import logging
 import random
 from itertools import islice
 from string import Template
-
+import datetime
 import discord
 from discord.ext import commands
 
 from utils import Winner, TicTacToe, InvalidMove, PlayerStats
 from utils.util import Pag
 
+from discord_slash import cog_ext, SlashContext, cog_ext, SlashContext
+from discord_slash.utils.manage_commands import create_option, create_choice
+
+guild_ids = [814374218602512395, 829615142450495601, 888085276801531967]
 
 class Games(commands.Cog):
     def __init__(self, bot):
@@ -50,7 +54,7 @@ class Games(commands.Cog):
         await messageable.edit(content=content, embed=embed)
 
     async def update_stats(self, member, end_state, was_player_one):
-        player = self.stats.get(member.id, PlayerStats(member.id))
+        player = await self.bot.tictactoe.find_by_custom({})
 
         if end_state.value == 1:
             if was_player_one:
@@ -93,9 +97,9 @@ class Games(commands.Cog):
         self.logger.info("I'm ready!")
         await self.populate_stats()
 
-    @commands.command(aliases=["ttt"])
+    @cog_ext.cog_slash(name="tictactoe", description="TicTacToe Games", options=[create_option(name="player", description="select player you want to play with", option_type=8, required=False)],guild_ids=guild_ids)
     @commands.max_concurrency(1, commands.BucketType.channel)
-    @is_bot_channel()
+    #@is_bot_channel()
     async def tictactoe(self, ctx, player_two: discord.Member = None):
         def check(m):
             return m.channel == ctx.channel and m.author == current_player
@@ -206,51 +210,63 @@ class Games(commands.Cog):
         await self.update_stats(ctx.author, winner, True)
         await self.update_stats(player_two, winner, False)
 
-    @commands.command()
-    @is_bot_channel()
-    async def stats(self, ctx, player: discord.Member = None):
+    @cog_ext.cog_slash(name="score", description="show stats of player", guild_ids=guild_ids, options=[create_option(name="player", description="select player to see there stats", option_type=8, required=False)])
+    #@is_bot_channel()
+    async def score(self, ctx, player: discord.Member = None):
         """Returns your TicTacToe stats"""
         player = player or ctx.author
-        if not (player_stats := self.stats.get(player.id)):
-            return await ctx.send(f"I have no stats for `{player.display_name}`")
+        data = await self.bot.tictactoe.find(player.id)
+        if not data: return await ctx.send(f"I have no stats for `{player.display_name}`")
 
         embed = discord.Embed(
             title=f"TicTacToe stats for: `{player.display_name}`",
-            description=f"Wins: **{player_stats.wins}**\n"
-            f"Losses: **{player_stats.losses}**\n"
-            f"Draws: **{player_stats.draws}**",
-            timestamp=ctx.message.created_at,
+            description=f"Wins: **{data['wins']}**\n"
+            f"Losses: **{data['losses']}**\n"
+            f"Draws: **{data['draws']}**",
+            timestamp=datetime.datetime.now(),
         )
         await ctx.send(embed=embed)
 
-    @commands.command(aliases=["lb"])
-    @is_bot_channel()
+    @cog_ext.cog_slash(name="leaderboard", description="shows leaderboard of tictactoe game", guild_ids=guild_ids,options=[create_option(name="type", description="select filter for the leaderboard", 
+        choices=[create_choice(
+                name="Wins",
+                value="aww"
+                ),
+            create_choice(
+                name="Losses",
+                value="losses"
+                ),
+            create_choice(
+                name="Draws",
+                value="draws"
+                ),],option_type=3, required=False)])
+    #@is_bot_channel()
     async def leaderboard(self, ctx, stat_type="wins"):
         """Shows the TicTacToe leaderboard"""
         if (stat_type := stat_type.lower()) not in ["wins", "losses", "draws"]:
             return await ctx.send("Invalid stat type requested!")
 
-        data = list(self.stats.values())
+        data = await self.bot.tictactoe.get_all()
         if not data:
             return await ctx.send("I have no stats to show.")
 
-        data = sorted(data, key=lambda x: getattr(x, stat_type), reverse=True)
-        data = await self.chunk_results(data, 10)
+        #data = sorted(data, key=lambda x: getattr(x, stat_type), reverse=True)
+        data = sorted(data, key=lambda x: x[stat_type], reverse=True)
+        #data = await self.chunk_results(data, 10)
 
-        pages = []
+        pages , i = [], 1
         for item in data:
             page = ""
-            for result in item:
-                page += f"<@{result.player_id}> - {getattr(result, stat_type)} {stat_type}\n"
+            page += f"{i}.<@{item['_id']}> - {item[stat_type]}\n"
             pages.append(page)
+            i += 1
 
         await Pag(
             title=f"TicTacToe leaderboard for `{stat_type}`",
             colour=0x11eca4,
             entries=pages,
-            length=1,
+            length=5,
         ).start(ctx)
-
 
 def setup(bot):
     bot.add_cog(Games(bot))

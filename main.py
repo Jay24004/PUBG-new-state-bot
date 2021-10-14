@@ -58,6 +58,7 @@ bot.blacklist_user = {}
 bot.guild_id = [797920317871357972]
 bot.cwd = cwd
 bot.perm = {}
+bot.config = {}
 bot.giveaway = {}
 bot.version = "1.0"
 bot.uptime = datetime.datetime.utcnow()
