@@ -6,3 +6,5 @@ cogs/moderation.txt
 cogs/slash.text
 .env
 cogs/test.py
+.venv
+cogs/temp.py

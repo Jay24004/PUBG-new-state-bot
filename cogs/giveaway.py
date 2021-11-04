@@ -34,14 +34,6 @@ admin_perms = {
 	create_permission(829615142450495609, SlashCommandPermissionType.ROLE, True),
 	create_permission(829615142450495608, SlashCommandPermissionType.ROLE, True)
 	],
-	885802388001288262:[	#FRANCE
-	create_permission(885814181549457418, SlashCommandPermissionType.ROLE, True),
-	create_permission(885815298110918666, SlashCommandPermissionType.ROLE, True),
-	create_permission(888409306616168560, SlashCommandPermissionType.ROLE, True),
-	create_permission(890486198471098368, SlashCommandPermissionType.ROLE, True),
-	create_permission(885814690138189824, SlashCommandPermissionType.ROLE, True),
-	create_permission(488614633670967307, SlashCommandPermissionType.USER, True)
-	],
 	888085276801531967: [
 	create_permission(488614633670967307, SlashCommandPermissionType.USER, True),
 	create_permission(889118775717269504, SlashCommandPermissionType.ROLE, True)
