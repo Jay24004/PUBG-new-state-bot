@@ -1,4 +1,5 @@
 import discord
+from discord import message
 from discord.ext import commands
 import re
 import datetime
@@ -14,11 +15,6 @@ def user_can(user: discord.Member, guild: discord.Guild, mod: str):
 			return True
 	return False
 
-bad_regex = re.compile(r'\b(?:%s)\b' % '|'.join(bad_word), flags=re.I|re.M)
-invite_regex = re.compile(r"((?:https?://)?discord(?:app)?\.(?:com/invite|gg|io|me|li|)/( |)[a-zA-Z0-9]+/?)|((|gg|io|me|li|)( |)([a-zA-Z0-9]+/?))", flags=re.I|re.M,)
-links_regex = r"(?i)\b((?:https?://|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}/)(?:[^\s()<>]+|\(([^\s()<>]+|(\([^\s(<>]+\)))*\))+(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:'\".,<>?«»“”‘’]))"
-emoji_regex = r"<(?P<animated>a)?:(?P<name>[0-9a-zA-Z_]{2,32}):(?P<id>[0-9]{15,21})>"
-
 class profanity(commands.Cog):
 	def __init__(self, bot):
 		self.bot = bot
@@ -27,8 +23,14 @@ class profanity(commands.Cog):
 	async def on_ready(self):
 		print(f"{self.__class__.__name__} Cog has been loaded\n-----")
 
-	@commands.Cog.listener()
-	async def on_message(self, message):
+def setup(bot):
+	bot.add_cog(profanity(bot))
+
+"""
+		bad_regex = re.compile(r'\b(?:%s)\b' % '|'.join(bad_word), flags=re.I|re.M)
+invite_regex = re.compile(r"((?:https?://)?discord(?:app)?\.(?:com/invite|gg|io|me|li|)/( |)[a-zA-Z0-9]+/?)|((|gg|io|me|li|)( |)([a-zA-Z0-9]+/?))", flags=re.I|re.M,)
+links_regex = r"(?i)\b((?:https?://|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}/)(?:[^\s()<>]+|\(([^\s()<>]+|(\([^\s(<>]+\)))*\))+(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:'\".,<>?«»“”‘’]))"
+emoji_regex = r"<(?P<animated>a)?:(?P<name>[0-9a-zA-Z_]{2,32}):(?P<id>[0-9]{15,21})>"
 		if message.author.bot: return
 
 		user = message.guild.get_member(message.author.id)
@@ -57,7 +59,7 @@ class profanity(commands.Cog):
 				await message.channel.send(f"{message.author.mention} don't send any links", delete_after=30)
 				return await log_channel.send(embed=embed)
 
-			"""
+			
 			all_caps = re.findall(r"[A-Z]", message.content)
 			print(all_caps)
 			if all_caps and len(all_caps) == len(message.content) and len(message.content) > 5:
@@ -91,7 +93,6 @@ class profanity(commands.Cog):
 
 				await message.channel.send(f"{message.author.mention} don't send too Many emojis", delete_after=30)
 				return await log_channel.send(embed=embed)
-			"""
+			
 
-def setup(bot):
-	bot.add_cog(profanity(bot))
+"""

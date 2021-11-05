@@ -143,8 +143,16 @@ class Misc(commands.Cog):
 		if data is None:
 			return await ctx.send("Setup is not done yet or Error has happaned")
 		await ctx.channel.send(f"{user} , Keep your eyes on <#{data['new']}> or follow **PUBG : NEW STATE** official social media accounts for the latest news.")
-		await ctx.send("done",hidden=True)	
-
+		await ctx.send("done",hidden=True)
+	
+	@cog_ext.cog_slash(name="media". guild_ids=guild_ids, description="When someone send Image not relted to newstate in media"default_permisson=False, permissons=staff_perm,
+		options=[create_option(name="user", description="Select users to reply", option_type=3,required=True)])
+	async def media(self, ctx, user: str):
+		await ctx.send("Done", hidden=True)
+		if ctx.guild.id == 814374218602512395:
+			await ctx.channel.send(f"Kindly do not post content in <#814383272456618054> unrelated to PUBG NEW {user}")
+		if ctx.guild.id == 829615142450495601:
+			await ctx.channel.send(f"Kindly do not post content in <#829615143124992021> unrelated to PUBG NEW {user}")
 
 def setup(bot):
 	bot.add_cog(Misc(bot))
