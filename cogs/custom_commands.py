@@ -149,10 +149,7 @@ class Misc(commands.Cog):
 		options=[create_option(name="user", description="Select users to reply", option_type=3,required=True)])
 	async def media(self, ctx, user: str):
 		await ctx.send("Done", hidden=True)
-		if ctx.guild.id == 814374218602512395:
-			await ctx.channel.send(f"Kindly do not post content in <#814383272456618054> unrelated to PUBG NEW STATE {user}")
-		if ctx.guild.id == 829615142450495601:
-			await ctx.channel.send(f"Kindly do not post content in <#829615143124992021> unrelated to PUBG NEW STATE {user}")
+		await ctx.channel.send(f"Please only post images, videos and fan-art related to PUBG New State {user}")
 	
 	@cog_ext.cog_slash(name="requirements", guild_ids=guild_ids, description="Display  Minimum Requirements for Game", default_permission=False, permissions=staff_perm, options=[create_option(name="user", description="Select users to reply", option_type=3,required=True)])
 	async def req(self, ctx, user: str):
