@@ -133,7 +133,7 @@ class Misc(commands.Cog):
 	@cog_ext.cog_slash(name="official", guild_ids=[814374218602512395], description="When someone ask if server is official",default_permission=False, permissions=staff_perm,
 		options=[create_option(name="user", description="Select users to reply", option_type=3,required=True),])
 	async def official(self, ctx, user: str):
-		await ctx.channel.send(f"{user} ,This is the Oldest and Biggest community of **PUBG : NEW STATE INDIA**.\n\nThere is no official server for **PUBG : NEW STATE**.")
+		await ctx.channel.send(f"{user} ,This is the Oldest and Biggest community of **PUBG : NEW STATE INDIA**.\n\nAll of the PUBG: NEW STATE servers are community run as of now, they will be made official after the game launches.")
 		await ctx.send("done",hidden=True)
 
 	@cog_ext.cog_slash(name="news", guild_ids=guild_ids, description="When someone ask for New State News",default_permission=False, permissions=staff_perm,
@@ -153,6 +153,28 @@ class Misc(commands.Cog):
 			await ctx.channel.send(f"Kindly do not post content in <#814383272456618054> unrelated to PUBG NEW {user}")
 		if ctx.guild.id == 829615142450495601:
 			await ctx.channel.send(f"Kindly do not post content in <#829615143124992021> unrelated to PUBG NEW {user}")
+	
+	@cog_ext.cog_slash(name="requirements", guild_ids=guild_ids, description="Display  Minimum Requirements for Game", default_permission=False, permissions=staff_perm, options=[create_option(name="user", description="Select users to reply", option_type=3,required=True)])
+	async def req(self, ctx, user: str):
+		await ctx.send("done", hidden=True)
+		await ctx.channel.send(f"{user}\n:white_medium_small_square: Minimum Requirements\n> **Android**\nCPU: 64-bit (ABI arm64 or higher)\nRAM: 2GB or higher\nOS: Android 6.0 or higher\nOpen GL 3.1 or higher / Vulkan 1.1 or higher.\n> **IOS**\nDevices with iOS 13 or higher.")
+	
+	@cog_ext.cog_slash(name="dsup", guild_ids=guild_ids, description="For redirecting into the server support channel",default_permission=False, permissions=staff_perm,
+		options=[create_option(name="user", description="Select users to reply", option_type=3,required=True)])
+	async def dsup(self, ctx, user: str):
+		await ctx.send("Done", hidden=True)
+		if ctx.guild.id == 814374218602512395:
+			await ctx.channel.send(f"{user}, use <#814482909397516358> for server related queries , suggestion and reports.")
+		if ctx.guild.id == 829615142450495601:
+			await ctx.channel.send(f"{user}, use <#882556698634616832> for server related queries , suggestion and reports.")
 
+	@cog_ext.cog_slash(name="gsup", guild_ids=guild_ids, description="For redirecting into the game support channel",default_permission=False, permissions=staff_perm,
+		options=[create_option(name="user", description="Select users to reply", option_type=3,required=True)])
+	async def gsup(self, ctx, user: str):
+		await ctx.send("Done", hidden=True)
+		if ctx.guild.id == 814374218602512395:
+			await ctx.channel.send(f"{user}, use <#886579285664628736> for game related queries.")
+		if ctx.guild.id == 829615142450495601:
+			await ctx.channel.send(f"{user}, use <#882556653583618068> for game related queries.")
 def setup(bot):
 	bot.add_cog(Misc(bot))
