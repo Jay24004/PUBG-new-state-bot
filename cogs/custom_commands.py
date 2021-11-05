@@ -164,9 +164,9 @@ class Misc(commands.Cog):
 	async def dsup(self, ctx, user: str):
 		await ctx.send("Done", hidden=True)
 		if ctx.guild.id == 814374218602512395:
-			await ctx.channel.send(f"{user}, use <#814482909397516358> for server related queries , suggestion and reports.")
+			await ctx.channel.send(f"{user}, use <#814482909397516358> for server related queries, suggestion and reports.")
 		if ctx.guild.id == 829615142450495601:
-			await ctx.channel.send(f"{user}, use <#882556698634616832> for server related queries , suggestion and reports.")
+			await ctx.channel.send(f"{user}, use <#882556698634616832> for server related queries, suggestion and reports.")
 
 	@cog_ext.cog_slash(name="gsup", guild_ids=guild_ids, description="For redirecting into the game support channel",default_permission=False, permissions=staff_perm,
 		options=[create_option(name="user", description="Select users to reply", option_type=3,required=True)])
