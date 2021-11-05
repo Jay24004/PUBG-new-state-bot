@@ -145,7 +145,7 @@ class Misc(commands.Cog):
 		await ctx.channel.send(f"{user} , Keep your eyes on <#{data['new']}> or follow **PUBG : NEW STATE** official social media accounts for the latest news.")
 		await ctx.send("done",hidden=True)
 	
-	@cog_ext.cog_slash(name="media". guild_ids=guild_ids, description="When someone send Image not relted to newstate in media"default_permisson=False, permissons=staff_perm,
+	@cog_ext.cog_slash(name="media", guild_ids=guild_ids, description="When someone send Image not relted to newstate in media",default_permission=False, permissions=staff_perm,
 		options=[create_option(name="user", description="Select users to reply", option_type=3,required=True)])
 	async def media(self, ctx, user: str):
 		await ctx.send("Done", hidden=True)
