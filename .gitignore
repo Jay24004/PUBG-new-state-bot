@@ -8,3 +8,4 @@ cogs/slash.text
 cogs/test.py
 .venv
 cogs/temp.py
+.vscode/settings.json

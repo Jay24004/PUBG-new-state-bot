@@ -119,6 +119,7 @@ if __name__ == "__main__":
     bot.perms = Document(bot.db, "permissions")
     bot.endgive = Document(bot.db, "back_up_giveaway")
     bot.tictactoe = Document(bot.db, "tictactoe")
+    bot.starboard = Document(bot.db, "starboard")
 
     
     for file in os.listdir(cwd + "/cogs"):
