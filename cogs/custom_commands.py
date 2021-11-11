@@ -173,5 +173,15 @@ class Misc(commands.Cog):
 			await ctx.channel.send(f"{user}, use <#886579285664628736> for game related queries.")
 		if ctx.guild.id == 829615142450495601:
 			await ctx.channel.send(f"{user}, use <#882556653583618068> for game related queries.")
+	
+	@cog_ext.cog_slash(name="findplayer", guild_ids=guild_ids, description="for redirecting into #find-player", default_permission=False, permissions=staff_perm,
+		options=[create_option(name="user", description="Select users to reply", option_type=3,required=True)])
+	async def findp(self, ctx, user:str):
+		await ctx.send("done", hidden=True)
+		if ctx.guild.id == 814374218602512395:
+			await ctx.channel.send(f"Use <#882969182210228314> to find other PUBG: New State players, {user}")
+		if ctx.guild.id == 829615142450495601:
+			await ctx.channel.send(f"Use <#814383414450585632> to find other PUBG: New State players, {user}")
+	
 def setup(bot):
 	bot.add_cog(Misc(bot))
