@@ -24,7 +24,7 @@ class Events(commands.Cog):
         if num == 1:
             member = len(set(self.bot.get_all_members()))
             activity = f'over {member} Players'
-            await self.bot.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name=activity),status=discord.Status.dnd)
+            await self.bot.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name=activity),status=discord.Status.online)
 
     @change_status.before_loop
     async def before_change_status(self):
