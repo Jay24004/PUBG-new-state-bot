@@ -24,19 +24,24 @@ guild_ids=[888085276801531967, 814374218602512395, 829615142450495601]
 admin_perms = {
 	814374218602512395:
 	[
-	create_permission(488614633670967307, SlashCommandPermissionType.USER, True),
 	create_permission(814405582177435658, SlashCommandPermissionType.ROLE, True),
-	create_permission(886551491744264222, SlashCommandPermissionType.ROLE, True)
+	create_permission(894123602918670346, SlashCommandPermissionType.ROLE, True)
 	],
 	829615142450495601: [	#BD
-	create_permission(567374379575672852, SlashCommandPermissionType.USER, True),
-	create_permission(488614633670967307, SlashCommandPermissionType.USER, True),
 	create_permission(829615142450495609, SlashCommandPermissionType.ROLE, True),
-	create_permission(829615142450495608, SlashCommandPermissionType.ROLE, True)
+	create_permission(894124699527815188, SlashCommandPermissionType.ROLE, True)
+	]
+}
+
+admin_perms1 = {
+	814374218602512395:
+	[
+	create_permission(814405582177435658, SlashCommandPermissionType.ROLE, True),
+	create_permission(894123602918670346, SlashCommandPermissionType.ROLE, True)
 	],
-	888085276801531967: [
-	create_permission(488614633670967307, SlashCommandPermissionType.USER, True),
-	create_permission(889118775717269504, SlashCommandPermissionType.ROLE, True)
+	829615142450495601: [	#BD
+	create_permission(829615142450495609, SlashCommandPermissionType.ROLE, True),
+	create_permission(894124699527815188, SlashCommandPermissionType.ROLE, True)
 	]
 }
 
@@ -221,7 +226,7 @@ class giveaway(commands.Cog):
 							pass
 						else:
 							embed = discord.Embed(title="Entery Decline:",
-								description=f"Your Entery for this [Giveaway]({message.jump_url}) has been declined\nReason:You don't have Required amari level to join the giveaway `{required['amari_level']}`", color=0xE74C3C)
+								description=f"Your Entery for this [Giveaway]({message.jump_url}) has been declined\nReason:You don't have Required amari level to join the giveaway `{data['amari_level']}`", color=0xE74C3C)
 							embed.timestamp = datetime.datetime.utcnow()
 							embed.set_footer(text=guild.name,icon_url=guild.icon_url)
 							try:
@@ -231,7 +236,7 @@ class giveaway(commands.Cog):
 							return await ctx.send("Your Entry has been declined because you don't meet the requirement", hidden=True)
 					else:
 						embed = discord.Embed(title="Entery Decline:",
-							description=f"Your Entery for this [Giveaway]({message.jump_url}) has been declined\nReason:Required amari level to join the giveaway `{required['amari_level']}`", color=0xE74C3C)
+							description=f"Your Entery for this [Giveaway]({message.jump_url}) has been declined\nReason:Required amari level to join the giveaway `{data['amari_level']}`", color=0xE74C3C)
 						embed.timestamp = datetime.datetime.utcnow()
 						embed.set_footer(text=guild.name,icon_url=guild.icon_url)
 						try:
@@ -249,7 +254,7 @@ class giveaway(commands.Cog):
 							pass
 						else:
 							embed = discord.Embed(title="Entery Decline:",
-								description=f"Your Entry to this [Giveaway]({message.jump_url}).has been denied.\nReason:You don't have the required Weekly Amari points `{required['weekly_amari']}`", color=0xE74C3C)
+								description=f"Your Entry to this [Giveaway]({message.jump_url}).has been denied.\nReason:You don't have the required Weekly Amari points `{data['weekly_amari']}`", color=0xE74C3C)
 							embed.timestamp = datetime.datetime.utcnow()
 							embed.set_footer(text=guild.name,icon_url=guild.icon_url)
 							try:
@@ -259,7 +264,7 @@ class giveaway(commands.Cog):
 							return await ctx.send("Your Entry has been declined because you don't meet the requirement", hidden=True)
 					else:
 						embed = discord.Embed(title="Entery Decline:",
-							description=f"Your Entery for this [Giveaway]({message.jump_url}) has been declined\nReason:You don't have Required Weekly Amari `{required['weekly_amari']}`", color=0xE74C3C)
+							description=f"Your Entery for this [Giveaway]({message.jump_url}) has been declined\nReason:You don't have Required Weekly Amari `{data['weekly_amari']}`", color=0xE74C3C)
 						embed.timestamp = datetime.datetime.utcnow()
 						embed.set_footer(text=guild.name,icon_url=guild.icon_url)
 						try:
@@ -331,8 +336,8 @@ class giveaway(commands.Cog):
 			else:
 				await ctx.send("it's Staff Only",hidden=True)
 
-	@cog_ext.cog_slash(name="gstart",description="A giveaway command", guild_ids=guild_ids,default_permission=False,
-		permissions=admin_perms,
+	@cog_ext.cog_subcommand(base="Giveaway", name="Start",description="A giveaway command", guild_ids=guild_ids, base_default_permission=False,
+		base_permissions=admin_perms,
 		options=[
 				create_option(name="time", description="How long the giveaway should last? i.e. 15s , 30m/h/d", option_type=3, required=True),
 				create_option(name="price", description="price of the giveaway", option_type=3, required=True),
@@ -430,8 +435,8 @@ class giveaway(commands.Cog):
 
 
 
-	@cog_ext.cog_slash(name="gend", description="Force end a giveaway", guild_ids=guild_ids,default_permission=False,
-		permissions=admin_perms,
+	@cog_ext.cog_subcommand(base="Giveaway" ,name="End", description="Force end a giveaway", guild_ids=guild_ids,base_default_permission=False,
+		base_permissions=admin_perms,
 		options=[
 				create_option(name="message_id", description="message id of the giveaway", required=True, option_type=3),
 				create_option(name="channel", description="channel of the giveaway", required=True, option_type=7)
@@ -529,8 +534,8 @@ class giveaway(commands.Cog):
 			await self.bot.endgive.upsert(backup)
 			await self.bot.give.delete(data)
 
-	@cog_ext.cog_slash(name="greroll", description="Reroll the giveaway for new winners",guild_ids=guild_ids,default_permission=False,
-		permissions=admin_perms,
+	@cog_ext.cog_subcommand(base="Giveaway" ,name="Reroll", description="Reroll the giveaway for new winners",guild_ids=guild_ids,base_default_permission=False,
+		base_permissions=admin_perms,
 		options=[
 			create_option(name="channel", description="channel of giveaway message", required=True, option_type=7),
 			create_option(name="message_id", description="message id of the giveaway", required=True, option_type=3),
@@ -580,8 +585,8 @@ class giveaway(commands.Cog):
 			f"Congratulations {reply}! You won the {price}")
 		await ctx.send(f"The Giveaway Winners are {reply}", hidden=True)
 
-	@cog_ext.cog_slash(name="gdelete", description="Delete a giveaway", guild_ids=guild_ids,default_permission=False,
-		permissions=admin_perms,
+	@cog_ext.cog_subcommand(base="Giveaway" ,name="Delete", description="Delete a giveaway", guild_ids=guild_ids,base_default_permission=False,
+		base_permissions=admin_perms1,
 		options=[
 				create_option(name="message_id", description="message id of the giveaway message", required=True, option_type=3),
 				create_option(name="channel", description="channel of the giveaway", required=True, option_type=7)
