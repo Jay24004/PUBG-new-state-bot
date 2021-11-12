@@ -48,7 +48,7 @@ async def whois(ctx: MenuContext):
 	embed.set_footer(text=f'ID {member.id}', icon_url=member.avatar_url)
 	perm ='`, `'.join([str(p[0]).replace("_", " ").title() for p in member.guild_permissions if p[1]])
 	embed.add_field(name="Guild Permissions:", value=f"`{perm}`",inline=False)
-	await ctx.send(embed=embed, hidden=False)
+	await ctx.send(embed=embed, hidden=True)
 
 class Config(commands.Cog):
 	def __init__(self, bot):
