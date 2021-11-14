@@ -183,5 +183,11 @@ class Misc(commands.Cog):
 		if ctx.guild.id == 829615142450495601:
 			await ctx.channel.send(f"Use <#814383414450585632> to find other PUBG: New State players, {user}")
 	
+	@cog_ext.cog_slash(name="fb", description="Show Formate for feedback message", guild_ids=guild_ids, default_permission=True, permissions=staff_perm,
+		options=[create_option(name="user", description="Select users to reply", option_type=3,required=True)])
+	async def fb(self, ctx, user: str):
+		await ctx.send("done", hidden=True)
+		await ctx.channel.send(f"{user}, When reporting a bug, providing the following information helps a lot.\n\n:white_small_square: The issue you faced \n:white_small_square: User ID\n▫️OS version ( Android / iOS )\n▫️Wifi / Cellular network\n▫️ Device Model with specs\n▫️ Region and in-game server\n▫️ Screenshot / Screen recording")
+		
 def setup(bot):
 	bot.add_cog(Misc(bot))
