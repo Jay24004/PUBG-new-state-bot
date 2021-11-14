@@ -39,7 +39,7 @@ intents = discord.Intents.all()  # Help command requires member intents
 DEFAULTPREFIX = "!"
 bot = commands.Bot(
     description="commands List of Me",
-    command_prefix=">",
+    command_prefix="?",
     case_insensitive=True,
     help_command=None,
     owner_ids=[391913988461559809, 488614633670967307, 301657045248114690],
@@ -122,7 +122,7 @@ if __name__ == "__main__":
 
     
     for file in os.listdir(cwd + "/cogs"):
-        if file.endswith(".py") and not file.startswith("_") and not file.startswith("test") and not file.startswith("temp"):
+        if file.endswith(".py") and not file.startswith("_"):
             bot.load_extension(f"cogs.{file[:-3]}")
     
     bot.run(bot.config_token)
