@@ -96,7 +96,7 @@ class Misc(commands.Cog):
 		data = await self.bot.config.find(ctx.guild.id)
 		if data is None:
 			return await ctx.send("Setup is not done yet or Error has happaned")
-		await ctx.channel.send(f"Please refer to this channel's pinned messages for further information, {user}\n▪︎PC: Click on the pin icon located in the top-right of the channel.\n▪︎ Mobile: Click on the channel name and select Pins located at the top.")
+		await ctx.channel.send(f"Please refer to this channel's pinned messages for further information, {user}\n▪︎PC: Click on the pin icon located in the top-right of the channel.\n▪︎Mobile: Click on the channel name and select Pins located at the top.")
 		await ctx.send("done",hidden=True)
 
 	@cog_ext.cog_slash(name="faq", guild_ids=guild_ids, description="refer someone to faq channel",default_permission=False, permissions=staff_perm,
