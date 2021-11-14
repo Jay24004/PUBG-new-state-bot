@@ -3,6 +3,11 @@ from discord import message
 from discord.ext import commands
 import re
 import datetime
+#from discord.ext.commands.core import command
+#from discord_slash.context import ComponentContext
+#from discord_slash.utils.manage_components import create_select, create_select_option, create_actionrow, create_button
+#from discord_slash.model import ButtonStyle
+
 
 
 bad_word = ['aand', 'aandu', 'balatkar', 'beti chod', 'bhadva', 'bhadve', 'bhandve', 'bhootni ke', 'bhosad', 'bhosadi ke', 'boobe', 'chinki', 'chod', 'chodu', 'chodu bhagat', 'chooche', 'choochi', 'choot', 'choot ke baal', 'chootia', 'chootiya', 'chuche', 'chuchi', 'chudai khanaa', 'chudan chudai', 'chut', 'chut ke baal', 'chut ke dhakkan', 'chut maarli', 'chutad', 'chutadd', 'chutan', 'chutia', 'chutiya', 'gaand', 'gaandfat', 'gaandmasti', 'gaandufad', 'gandu', 'gashti', 'gasti', 'ghassa', 'ghasti', 'haramzade', 'hawas', 'hawas ke pujari', 'hijda', 'hijra', 'jhant', 'jhant chaatu', 'jhant ke baal', 'jhantu', 'kamine', 'kaminey', 'kanjar', 'kutta kamina', 'kutte ki aulad', 'kutte ki jat', 'kuttiya', 'loda', 'lodu', 'lund', 'lund choos', 'lund khajoor', 'lundtopi', 'lundure', 'maa ki chut', 'madar chod', 'mooh mein le', 'mutth', 'raand', 'randi', 'kutti', 'randi', 'tatte', 'bhosada', 'chut', 'harak', 'anal', 'anus', 'arse', 'ass', 'ballsack', 'balls', 'bastard', 'bitch', 'biatch', 'bloody', 'blowjob', 'blow job', 'bollock', 'bollok', 'boner', 'boob', 'bugger', 'bum', 'butt', 'buttplug', 'clitoris', 'cock', 'coon', 'cunt', 'dick', 'dildo', 'dyke', 'fag', 'feck', 'fellate', 'fellatio', 'felching', 'fuck', 'f u c k', 'fudgepacker', 'fudge packer', 'flange', 'homo', 'jerk', 'jizz', 'knobend', 'knob end', 'labia', 'muff', 'nigger', 'nigga', 'penis', 'prick', 'pube', 'pussy', 'queer', 'scrotum', 'sex', 'slut', 'smegma', 'spunk', 'tit', 'tosser', 'turd', 'twat', 'vagina', 'wank', 'whore', 'bisi', 'lode', 'Bcmc', 'lovde', 'chutiya', 'chutiye', 'madherchod', 'benchod', 'bcmc', 'madarchod', 'madrchod', 'madrchd', 'bhenchod', 'gandu', 'lund', 'lunn', 'lun', 'hutiya', 'chutchoot', 'chumtiya', 'chuntia', 'chutia', 'fucker', 'sucker', 'dickhead', 'asshole', 'niga', 'Niga', 'Nigga', '%bc%', 'gai', 'gea']
@@ -22,6 +27,15 @@ class profanity(commands.Cog):
 	@commands.Cog.listener()
 	async def on_ready(self):
 		print(f"{self.__class__.__name__} Cog has been loaded\n-----")
+	
+	@commands.Cog.listener()
+	async def on_message(self, message):
+		if message.channel.id != 909324051137323038: return 
+		if len(message.attachments) == 0: return
+		upvote = self.bot.get_emoji(909324837028261929)
+		downvote = self.bot.get_emoji(909324818418110524)
+		await message.add_reaction(upvote)
+		await message.add_reaction(downvote)
 
 def setup(bot):
 	bot.add_cog(profanity(bot))
