@@ -35,7 +35,7 @@ class profanity(commands.Cog):
 		upvote = self.bot.get_emoji(909324837028261929)
 		downvote = self.bot.get_emoji(909324818418110524)
 		await message.add_reaction(upvote)
-		await message.add_reaction(downvote)
+		
 
 def setup(bot):
 	bot.add_cog(profanity(bot))
