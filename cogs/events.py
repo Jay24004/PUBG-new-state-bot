@@ -73,10 +73,6 @@ class Events(commands.Cog):
                     f" You must wait {int(h)} hours, {int(m)} minutes and {int(s)} seconds to use this command!",hidden=True
                 )
         else:
-            embed = discord.Embed(color=0xE74C3C, 
-                description=f"Error: `{ex}`")
-            channel = self.bot.get_channel(893057761607315496)
-            await channel.send(embed=embed)
-    
+            raise ex
 def setup(bot):
     bot.add_cog(Events(bot))

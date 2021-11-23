@@ -23,6 +23,19 @@ from discord.ext import commands
 
 description = "Some Basic commands"
 
+staff_perm = {
+    814374218602512395:[
+    create_permission(567374379575672852, SlashCommandPermissionType.USER, True),
+    create_permission(488614633670967307, SlashCommandPermissionType.USER, True),
+    create_permission(573896617082748951, SlashCommandPermissionType.USER, True)
+    ],
+    829615142450495601:[
+    create_permission(567374379575672852, SlashCommandPermissionType.USER, True),
+    create_permission(488614633670967307, SlashCommandPermissionType.USER, True),
+    create_permission(573896617082748951, SlashCommandPermissionType.USER, True)
+    ]
+}
+
 class Basic(commands.Cog, description=description):
     def __init__(self, bot):
         self.bot = bot
@@ -91,15 +104,8 @@ class Basic(commands.Cog, description=description):
         embed.set_footer(
             text=f"Developed by Jay | {self.bot.user.name}",icon_url=self.bot.user.avatar_url)
         await ctx.send(embed=embed, delete_after=60)
-
-    @cog_ext.cog_slash(
-        name="update", description="A commands for bot updates", guild_ids=None
-        )
-    async def update(self, ctx):
-        embed = discord.Embed(color=0x2f3136, description="1.An have added the `/help` command currently very simple - <t:1632907725:R>\n\n2.The /say command has been improved now, you can't ping `@everyone or any other roles` <t:1632981213:R>\n\n3. New Mini-Games and Error Handler")
-        await ctx.send(embed=embed)
     
-    @cog_ext.cog_slash(name="help", description="help command for your help", guild_ids=None)
+    @cog_ext.cog_slash(name="help", description="help command for your help", guild_ids=None, default_permission=False, permissions=staff_perm)
     async def help(self, ctx):
 
         timestamp = datetime.datetime.utcnow()

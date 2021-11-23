@@ -61,7 +61,10 @@ class Config(commands.Cog):
 			if ctx.author == ctx.guild.owner: return True
 			staff_roleID = [886551491744264222, 814405582177435658,814483202860908564,894123602918670346,892089910528462919,814405684581236774,816595613230694460]
 			for role in ctx.author.roles:
-				if role.id in staff_roleID: return True
+				if role.id in staff_roleID:
+					return True
+				else:
+					await ctx.send("Your not allowed to this",hidden=True)
 		return commands.check(predicate)
 
 
