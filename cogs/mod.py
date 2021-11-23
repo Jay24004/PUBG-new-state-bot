@@ -5,6 +5,8 @@ from discord_slash import cog_ext, SlashContext, cog_ext, SlashContext
 from discord_slash.utils.manage_commands import create_option, create_choice, create_permission
 from discord_slash.model import SlashCommandPermissionType
 from discord_slash.context import MenuContext
+from discord_slash.utils.manage_components import create_button, create_actionrow
+from discord_slash.model import ButtonStyle
 from discord_slash.model import ContextMenuType
 
 guild_ids = [814374218602512395, 829615142450495601]
@@ -114,6 +116,13 @@ class Config(commands.Cog):
 	@is_server_staff()
 	async def whois_u(self, ctx):
 		await whois(ctx)
+	
+	@cog_ext.cog_slash(name="vote", description="Get vote link of the server", guild_ids=[814374218602512395])
+	async def vote(self, ctx):
+		guild = self.bot.get_guild(888085276801531967)
+		emoji = await guild.fetch_emoji(912764847891025960)
+		buttons = [create_button(style=ButtonStyle.URL, label="Top.gg", emoji=emoji, disabled=False, url="https://top.gg/servers/814374218602512395/vote")]
+		await ctx.send("You can vote for the server from the link given below.", components=[create_actionrow(*buttons)], hidden=True)
 
 
 def setup(bot):
