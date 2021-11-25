@@ -44,7 +44,7 @@ class tags(commands.Cog):
 
     @commands.Cog.listener()
     async def on_ready(self):
-        print(f"{self.__class__.__name__} is Ready")
+        print(f"{self.__class__.__name__} Cog has been loaded\n-----")
     
     @cog_ext.cog_subcommand(base="TagM", name="create", description="Create New Tag", guild_ids=guild_ids, base_default_permission=False,base_permissions=admin_perms, 
         options=[
