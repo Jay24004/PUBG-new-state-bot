@@ -1,7 +1,6 @@
 import asyncio
 from datetime import datetime
 import re
-from typing_extensions import Required
 import discord
 import datetime
 from discord import guild
