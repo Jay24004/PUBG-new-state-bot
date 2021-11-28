@@ -3,6 +3,7 @@ import contextlib
 import io
 import logging
 import os
+from discord import embeds
 from dotenv import load_dotenv
 
 # Third party librariesimport textwrap
@@ -50,20 +51,13 @@ slash = SlashCommand(bot, sync_commands=True, sync_on_cog_reload=True)
 bot.config_token = str(os.getenv('TOKEN'))
 bot.connection_url = str(os.getenv('MONGO'))
 bot.amari = str(os.getenv('AMARI'))
-
 logging.basicConfig(level=logging.INFO)
 
 
-bot.blacklist_user = {}
-bot.guild_id = [797920317871357972]
 bot.cwd = cwd
-bot.perm = {}
-bot.config = {}
 bot.giveaway = {}
 bot.version = "1.0"
 bot.uptime = datetime.datetime.utcnow()
-
-guild_ids = [814374218602512395, 829615142450495601]
 
 owner_perm = {
     814374218602512395:[
@@ -91,7 +85,7 @@ async def on_ready():
 
     print("Database Connected\n-----")
 
-@slash.slash(name="logout", description="Disconnect bot from discord", default_permission=False, permissions=owner_perm,guild_ids=guild_ids)
+@slash.slash(name="logout", description="Disconnect bot from discord", default_permission=False, permissions=owner_perm)
 async def logout(ctx):
     await ctx.send("Bye Bye logging out!")
     await bot.close()
@@ -114,15 +108,15 @@ if __name__ == "__main__":
     bot.db = bot.mongo["tgk_database"]
     bot.config = Document(bot.db, "config")
     bot.give = Document(bot.db, "giveaway")
-    bot.score = Document(bot.db, "score")
+    #bot.score = Document(bot.db, "score")
     bot.perms = Document(bot.db, "permissions")
     bot.endgive = Document(bot.db, "back_up_giveaway")
-    bot.tictactoe = Document(bot.db, "tictactoe")
+    #bot.tictactoe = Document(bot.db, "tictactoe")
     bot.starboard = Document(bot.db, "starboard")
+    bot.tags= Document(bot.db, "tags")
 
     
     for file in os.listdir(cwd + "/cogs"):
-        if file.endswith(".py") and not file.startswith("_"):
+        if file.endswith(".py") and not file.startswith("_")and not file.startswith('temps'):
             bot.load_extension(f"cogs.{file[:-3]}")
-    
     bot.run(bot.config_token)
