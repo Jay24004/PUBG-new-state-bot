@@ -30,6 +30,7 @@ import utils.json_loader
 from utils.mongo import Document
 from utils.util import Pag
 from utils.util import clean_code
+from discord_together import DiscordTogether
 
 load_dotenv()
 cwd = Path(__file__).parents[0]
@@ -46,7 +47,7 @@ bot = commands.Bot(
     owner_ids=[391913988461559809, 488614633670967307, 301657045248114690],
     intents=intents,
 )
-slash = SlashCommand(bot, sync_commands=True, sync_on_cog_reload=True)
+slash = SlashCommand(bot, sync_commands=False, sync_on_cog_reload=False,)
 # change command_prefix='-' to command_prefix=get_prefix for custom prefixes
 bot.config_token = str(os.getenv('TOKEN'))
 bot.connection_url = str(os.getenv('MONGO'))
@@ -76,6 +77,7 @@ owner_perm = {
 @bot.event
 async def on_ready():
     # On ready, print some details to standard out
+    bot.togetherControl = await DiscordTogether(bot.config_token)
     print(
         f"-----\nLogged in as: {bot.user.name} : {bot.user.id}\n-----\nMy current prefix is: None\n-----")
 
@@ -117,6 +119,6 @@ if __name__ == "__main__":
 
     
     for file in os.listdir(cwd + "/cogs"):
-        if file.endswith(".py") and not file.startswith("_")and not file.startswith('temps'):
+        if file.endswith(".py") and not file.startswith("_")and not file.startswith('temp'):
             bot.load_extension(f"cogs.{file[:-3]}")
     bot.run(bot.config_token)
