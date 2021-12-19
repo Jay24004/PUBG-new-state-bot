@@ -47,14 +47,6 @@ class Activity(commands.Cog):
             link_button = [create_button(style=ButtonStyle.URL, label="Start", url=link)]
             return await res.edit_origin(embed=embed, components=[create_actionrow(*link_button)])            
         except asyncio.TimeoutError:
-            buttons =[
-                create_button(style=ButtonStyle.green,label="youtube", disabled=True),
-                create_button(style=ButtonStyle.green,label="chess", disabled=True),
-                create_button(style=ButtonStyle.green,label="fishing", disabled=True),
-                create_button(style=ButtonStyle.green,label="word-snack", disabled=True),
-                create_button(style=ButtonStyle.green,label="doodle-crew", disabled=True),]
-            await message.edit("TimeoutError",components=[create_actionrow(buttons)])
-            await asyncio.sleep(10)
             await message.delete()
 
 def setup(bot):
