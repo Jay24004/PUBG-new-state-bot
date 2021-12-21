@@ -1,4 +1,6 @@
 import discord
+from discord import member
+from discord import channel
 from discord.ext import commands
 import datetime
 from discord_slash import cog_ext, SlashContext, cog_ext, SlashContext
@@ -8,8 +10,13 @@ from discord_slash.context import MenuContext
 from discord_slash.utils.manage_components import create_button, create_actionrow
 from discord_slash.model import ButtonStyle
 from discord_slash.model import ContextMenuType
+import re
+import requests
+import json
 
 guild_ids = [814374218602512395, 829615142450495601]
+time_regex = re.compile("(?:(\d{1,5})(h|s|m|d))+?")
+time_dict = {"h": 3600, "s": 1, "m": 60, "d": 86400}
 
 owner_perm = {
     814374218602512395:[
@@ -24,33 +31,50 @@ owner_perm = {
     ]
 }
 
-async def whois(ctx: MenuContext):
-	def fomat_time(time):
-		return time.strftime('%d-%B-%Y %I:%m %p')
+staff_perm = {
+	829615142450495601:[ #bd 
+	create_permission(567374379575672852, SlashCommandPermissionType.USER, True),
+	create_permission(488614633670967307, SlashCommandPermissionType.USER, True),
+	create_permission(573896617082748951, SlashCommandPermissionType.USER, True),
+	create_permission(829615142450495608, SlashCommandPermissionType.ROLE, True),
+	create_permission(829615142450495607, SlashCommandPermissionType.ROLE, True),
+	create_permission(829615142450495603, SlashCommandPermissionType.ROLE, True),
+	],
+	814374218602512395:[ #india
+	create_permission(567374379575672852, SlashCommandPermissionType.USER, True),
+	create_permission(488614633670967307, SlashCommandPermissionType.USER, True),
+	create_permission(573896617082748951, SlashCommandPermissionType.USER, True),
+	create_permission(814405582177435658, SlashCommandPermissionType.ROLE, True),
+	create_permission(814405684581236774, SlashCommandPermissionType.ROLE, True),
+	create_permission(816595613230694460, SlashCommandPermissionType.ROLE, True),
+	],
+}
 
-	member = ctx.target_message.author or ctx.target_author
-	usercolor = member.color
+mute_perm = {
+	814374218602512395:
+	[
+		create_permission(814405582177435658, SlashCommandPermissionType.ROLE, True),
+		create_permission(894123602918670346, SlashCommandPermissionType.ROLE, True),
+		create_permission(814405684581236774, SlashCommandPermissionType.ROLE, True),
+	]
+}
 
-	today = (datetime.datetime.utcnow() -
-	member.created_at).total_seconds()
+class TimeConverter(commands.Converter):
+    async def convert(self, ctx, argument):
+        args = argument.lower()
+        matches = re.findall(time_regex, args)
+        time = 0
+        for key, value in matches:
+            try:
+                time += time_dict[value] * float(key)
+            except KeyError:
+                raise commands.BadArgument(
+                    f"{value} is an invalid time key! h|m|s|d are valid arguments"
+                )
+            except ValueError:
+                raise commands.BadArgument(f"{key} is not a number!")
+        return round(time)
 
-	embed = discord.Embed(title=f'{member.name}', color=usercolor)
-	embed.set_thumbnail(url=member.avatar_url)
-	embed.add_field(name='Account Name:',
-		value=f'{member.name}', inline=False)
-	embed.add_field(
-		name='Created at:', value=f"{fomat_time(member.created_at)}")
-	embed.add_field(name='Joined at', value=fomat_time(member.joined_at))
-
-	hsorted_roles = sorted(
-	[role for role in member.roles[-2:]], key=lambda x: x.position, reverse=True)
-
-	embed.add_field(name='Number of Roles',
-		value=f"{len(member.roles) -1 }")
-	embed.set_footer(text=f'ID {member.id}', icon_url=member.avatar_url)
-	perm ='`, `'.join([str(p[0]).replace("_", " ").title() for p in member.guild_permissions if p[1]])
-	embed.add_field(name="Guild Permissions:", value=f"`{perm}`",inline=False)
-	await ctx.send(embed=embed, hidden=True)
 
 class Config(commands.Cog):
 	def __init__(self, bot):
@@ -71,6 +95,37 @@ class Config(commands.Cog):
 	@commands.Cog.listener()
 	async def on_ready(self):
 		print(f"{self.__class__.__name__} Cog has been loaded\n-----")
+
+	@cog_ext.cog_slash(name="Mute", description="Put User in timeout", default_permission=False, permissions=mute_perm, guild_ids=[814374218602512395],
+		options=[create_option(name="user", description="Select user", option_type=6, required=True),
+		create_option(name="time", description="set time max 28days", required=False, option_type=3),
+		create_option(name="reason", description="reason of timeout", required=False, option_type=3)])
+	async def timeout(self, ctx, user: discord.Member, time: TimeConverter, reason: str=None):
+		time = await TimeConverter().convert(ctx, time)
+		print(time)
+		if int(time) > 2419200:return await ctx.send("You can't set timeout for more than 28days", hidden=True)
+		timeout = datetime.datetime.utcnow() + datetime.timedelta(seconds=time)
+		timeout = timeout.isoformat()
+
+		payload = {
+            "communication_disabled_until": timeout
+            }
+		headers = {
+    		"Authorization": f"Bot {self.bot.config_token}",
+    		"Content-Type": "application/json",
+    		}
+
+		r = requests.patch(f'https://discord.com/api/v9/guilds/{ctx.guild.id}/members/{user.id}', data=json.dumps(payload),headers=headers)
+		await ctx.send("Muted successfully", hidden=True)
+		embed = discord.Embed(description=f"<:dynosuccess:898244185814081557> ***{user} Was Timeout*** | {reason}",color=0x11eca4)
+		await ctx.channel.send(embed=embed)
+		log_embed = discord.Embed(title=f"Mute | {user}")
+		log_embed.add_field(name="User", value=user.mention)
+		log_embed.add_field(name="Moderator", value=ctx.author.mention)
+		log_embed.add_field(name="Reason", value=reason or "None")
+		channel = self.bot.get_channel(814461938997788703)
+		await channel.send(embed=log_embed)
+
 
 	@cog_ext.cog_slash(name="config", description="change configuration of server", guild_ids=guild_ids, default_permission=False,permissions=owner_perm,options=[
 		create_option(name="general", description="select general channel for your server",required=False, option_type=7),
@@ -109,17 +164,7 @@ class Config(commands.Cog):
 			await ctx.send("Server config updated\nNew commands is coming where you can see your configs",hidden=True)
 		else:
 			await ctx.send("You need `administrator` permissions to use this command")
-
-	@cog_ext.cog_context_menu(target=ContextMenuType.MESSAGE, name="userinfo", guild_ids=[814374218602512395])
-	@is_server_staff()
-	async def whois_m(self, ctx):
-		await whois(ctx)
-	
-	@cog_ext.cog_context_menu(target=ContextMenuType.USER, name="user info", guild_ids=[814374218602512395])
-	@is_server_staff()
-	async def whois_u(self, ctx):
-		await whois(ctx)
-	
+				
 	@cog_ext.cog_slash(name="vote", description="Get vote link of the server", guild_ids=[814374218602512395])
 	async def vote(self, ctx):
 		guild = self.bot.get_guild(888085276801531967)
