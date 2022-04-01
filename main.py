@@ -59,6 +59,7 @@ bot.cwd = cwd
 bot.giveaway = {}
 bot.version = "1.0"
 bot.uptime = datetime.datetime.utcnow()
+bot.automod = True
 
 owner_perm = {
     814374218602512395:[
